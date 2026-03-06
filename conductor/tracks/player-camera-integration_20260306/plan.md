@@ -25,12 +25,12 @@
 - [x] Task: Conductor - User Manual Verification 'Create Camera Component' (Protocol in workflow.md) d41261f
 
 ### Task: Integrate Camera into Main UI
-- [ ] **Red Phase:** Update `frontend/src/test/App.test.tsx` to verify the presence of the camera expandable card.
-- [ ] **Green Phase:** Implement the expandable card in `frontend/src/App.tsx` or a new component.
-- [ ] **Green Phase:** Connect the `CameraComponent` to the main application state.
-- [ ] **Green Phase:** Update `frontend/src/api/narrative.ts` to include the photo in the RPC request.
-- [ ] Verify coverage (>80%) for new code.
-- [ ] Task: Conductor - User Manual Verification 'Integrate Camera into Main UI' (Protocol in workflow.md)
+- [x] **Red Phase:** Update `frontend/src/test/App.test.tsx` to verify the presence of the camera expandable card. 2981e48
+- [x] **Green Phase:** Implement the expandable card in `frontend/src/App.tsx` or a new component. 2981e48
+- [x] **Green Phase:** Connect the `CameraComponent` to the main application state. 2981e48
+- [x] **Green Phase:** Update `frontend/src/api/narrative.ts` to include the photo in the RPC request. 2981e48
+- [x] Verify coverage (>80%) for new code. 2981e48
+- [x] Task: Conductor - User Manual Verification 'Integrate Camera into Main UI' (Protocol in workflow.md) 2981e48
 
 ### Task: Final Polish and Realism Check
 - [ ] Verify the "realistic" style of generated images with the captured photo.
