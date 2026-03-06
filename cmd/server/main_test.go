@@ -1,25 +1,25 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"net"
+	"net/http"
 	"testing"
 	"time"
-
-	"google.golang.org/grpc"
 )
 
 func TestServerStartup(t *testing.T) {
 	port := 50052
-	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
-	if err != nil {
-		t.Fatalf("failed to listen: %v", err)
+	
+	mux := http.NewServeMux()
+	srv := &http.Server{
+		Addr:    fmt.Sprintf(":%d", port),
+		Handler: mux,
 	}
-	defer lis.Close()
 
-	s := grpc.NewServer()
 	go func() {
-		if err := s.Serve(lis); err != nil && err != grpc.ErrServerStopped {
+		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			fmt.Printf("failed to serve: %v\n", err)
 		}
 	}()
@@ -34,5 +34,7 @@ func TestServerStartup(t *testing.T) {
 		conn.Close()
 	}
 
-	s.GracefulStop()
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	srv.Shutdown(ctx)
 }
