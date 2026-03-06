@@ -11,8 +11,8 @@ import (
 )
 
 type GeminiClient interface {
-	GenerateContent(ctx context.Context, model string, prompt string) (string, error)
-	GenerateImage(ctx context.Context, model string, prompt string) ([]byte, error)
+	GenerateContent(ctx context.Context, prompt string) (string, error)
+	GenerateImage(ctx context.Context, prompt string) ([]byte, error)
 }
 
 type NarrativeService struct {
@@ -35,7 +35,7 @@ func (s *NarrativeService) GenerateNarrative(ctx context.Context, req *narrative
 		}
 	}
 
-	text, err := s.genaiClient.GenerateContent(ctx, "gemini-3.0-flash-preview", prompt)
+	text, err := s.genaiClient.GenerateContent(ctx, prompt)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to generate narrative: %v", err)
 	}
@@ -47,7 +47,7 @@ func (s *NarrativeService) GenerateImage(ctx context.Context, req *narrative.Gen
 	// Stylized illustration support
 	prompt := fmt.Sprintf("A vibrant, stylized illustration of: %s. Art style: digital painting, expressive, atmospheric.", req.Prompt)
 
-	imageData, err := s.genaiClient.GenerateImage(ctx, "gemini-3.1-flash-image-preview", prompt)
+	imageData, err := s.genaiClient.GenerateImage(ctx, prompt)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to generate image: %v", err)
 	}
@@ -64,19 +64,19 @@ func NewRealGeminiClient(client *genai.Client) GeminiClient {
 	return &realGeminiClient{client: client}
 }
 
-func (r *realGeminiClient) GenerateContent(ctx context.Context, model string, prompt string) (string, error) {
-	result, err := r.client.Models.GenerateContent(ctx, model, genai.Text(prompt), nil)
+func (r *realGeminiClient) GenerateContent(ctx context.Context, prompt string) (string, error) {
+	result, err := r.client.Models.GenerateContent(ctx, "gemini-3-flash-preview", genai.Text(prompt), nil)
 	if err != nil {
 		return "", err
 	}
 	return result.Text(), nil
 }
 
-func (r *realGeminiClient) GenerateImage(ctx context.Context, model string, prompt string) ([]byte, error) {
+func (r *realGeminiClient) GenerateImage(ctx context.Context, prompt string) ([]byte, error) {
 	config := &genai.GenerateContentConfig{
 		ResponseModalities: []string{"IMAGE"},
 	}
-	resp, err := r.client.Models.GenerateContent(ctx, model, genai.Text(prompt), config)
+	resp, err := r.client.Models.GenerateContent(ctx, "gemini-3.1-flash-image-preview", genai.Text(prompt), config)
 	if err != nil {
 		return nil, err
 	}

@@ -23,7 +23,7 @@ func main() {
 	// Initialize GenAI client
 	genaiClient, err := genai.NewClient(ctx, nil)
 	if err != nil {
-		log.Fatalf("failed to create genai client: %v", err)
+		log.Fatalf("failed to create genAI client: %v", err)
 	}
 
 	port := os.Getenv("PORT")
@@ -37,8 +37,7 @@ func main() {
 	}
 
 	s := grpc.NewServer()
-	
-	// Create narrative service with real Gemini client
+
 	realClient := service.NewRealGeminiClient(genaiClient)
 	narrativeService := service.NewNarrativeService(realClient)
 	narrative.RegisterNarrativeServiceServer(s, narrativeService)
