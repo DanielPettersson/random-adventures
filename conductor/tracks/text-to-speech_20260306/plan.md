@@ -28,11 +28,11 @@
 - [x] Task: Conductor - User Manual Verification 'Phase 3: Frontend Integration & State Management' (Protocol in workflow.md) (edd55f6)
 
 ## Phase 4: UI Components & Playback Logic
-- [ ] Task: Add a "Text-to-Speech" global toggle to the UI.
-    - [ ] Place the toggle in an accessible location (e.g., in a settings section or near the prompt input).
-- [ ] Task: Implement audio playback logic in the frontend.
-    - [ ] Create a utility function or component for handling audio playback from bytes (Base64).
-    - [ ] Trigger audio fetching and playback when a new narrative segment is added and TTS is enabled.
-- [ ] Task: Write failing tests for the UI components and playback triggers.
-- [ ] Task: Verify the implementation passes all tests.
-- [ ] Task: Conductor - User Manual Verification 'Phase 4: UI Components & Playback Logic' (Protocol in workflow.md)
+- [x] Task: Add a "Text-to-Speech" global toggle to the UI. (8c3a286)
+    - [x] Place the toggle in an accessible location (e.g., in a settings section or near the prompt input). (8c3a286)
+- [x] Task: Implement audio playback logic in the frontend. (8c3a286)
+    - [x] Create a utility function or component for handling audio playback from bytes (Base64). (8c3a286)
+    - [x] Trigger audio fetching and playback when a new narrative segment is added and TTS is enabled. (8c3a286)
+- [x] Task: Write failing tests for the UI components and playback triggers. (8c3a286)
+- [x] Task: Verify the implementation passes all tests. (8c3a286)
+- [x] Task: Conductor - User Manual Verification 'Phase 4: UI Components & Playback Logic' (Protocol in workflow.md) (8c3a286)
