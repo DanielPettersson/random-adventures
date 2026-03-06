@@ -18,11 +18,11 @@
 ## Phase 2: Frontend Implementation
 
 ### Task: Create Camera Component
-- [ ] **Red Phase:** Write failing tests in `frontend/src/test/CameraComponent.test.tsx` for a new `CameraComponent`.
-- [ ] **Green Phase:** Implement `CameraComponent` using the browser's MediaDevices API.
-- [ ] **Green Phase:** Add functionality to capture a photo and convert it to Base64.
-- [ ] Verify coverage (>80%) for new code.
-- [ ] Task: Conductor - User Manual Verification 'Create Camera Component' (Protocol in workflow.md)
+- [x] **Red Phase:** Write failing tests in `frontend/src/test/CameraComponent.test.tsx` for a new `CameraComponent`. d41261f
+- [x] **Green Phase:** Implement `CameraComponent` using the browser's MediaDevices API. d41261f
+- [x] **Green Phase:** Add functionality to capture a photo and convert it to Base64. d41261f
+- [x] Verify coverage (>80%) for new code. d41261f
+- [x] Task: Conductor - User Manual Verification 'Create Camera Component' (Protocol in workflow.md) d41261f
 
 ### Task: Integrate Camera into Main UI
 - [ ] **Red Phase:** Update `frontend/src/test/App.test.tsx` to verify the presence of the camera expandable card.
