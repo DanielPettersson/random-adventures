@@ -1,34 +1,61 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
+import ToneSelection from './components/ToneSelection'
+import AdventureFeed from './components/AdventureFeed'
+import type { AdventureSegment } from './components/AdventureFeed'
+import PromptInput from './components/PromptInput'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [tone, setTone] = useState<string | null>(null)
+  const [segments, setSegments] = useState<AdventureSegment[]>([])
+  const [isLoading, setIsLoading] = useState(false)
+
+  const handleToneSelect = (selectedTone: string) => {
+    setTone(selectedTone)
+    setSegments([
+      { id: '1', text: `Starting a ${selectedTone} adventure...` }
+    ])
+  }
+
+  const handlePromptSubmit = (prompt: string) => {
+    setIsLoading(true)
+    const newSegment: AdventureSegment = {
+      id: Date.now().toString(),
+      text: prompt
+    }
+    setSegments(prev => [...prev, newSegment])
+    
+    // Simulate API call for now
+    setTimeout(() => {
+      setSegments(prev => prev.map(s => 
+        s.id === newSegment.id ? { ...s, imageData: 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg==' } : s
+      ))
+      setIsLoading(false)
+    }, 1000)
+  }
+
+  const handleReset = () => {
+    setTone(null)
+    setSegments([])
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div className="app-container">
+      <h1>Random Adventures</h1>
+      
+      {!tone ? (
+        <ToneSelection onSelect={handleToneSelect} />
+      ) : (
+        <>
+          <div className="game-controls">
+            <button onClick={handleReset}>Reset Adventure</button>
+            <p>Tone: <strong>{tone}</strong></p>
+          </div>
+          <AdventureFeed segments={segments} />
+          <PromptInput onSubmit={handlePromptSubmit} disabled={isLoading} />
+        </>
+      )}
+    </div>
   )
 }
 

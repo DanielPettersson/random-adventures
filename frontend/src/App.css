@@ -5,38 +5,80 @@
   text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.app-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  min-height: 80vh;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.tone-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.adventure-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 1rem;
+  border: 1px solid #444;
+  border-radius: 8px;
+  background: #1a1a1a;
+  max-height: 500px;
+  overflow-y: auto;
 }
 
-.card {
-  padding: 2em;
+.adventure-segment {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  border-bottom: 1px solid #333;
 }
 
-.read-the-docs {
+.segment-image img {
+  max-width: 100%;
+  border-radius: 4px;
+}
+
+.image-placeholder {
+  width: 100%;
+  aspect-ratio: 16/9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #333;
   color: #888;
+  border-radius: 4px;
+}
+
+.prompt-input {
+  display: flex;
+  gap: 0.5rem;
+  max-width: 800px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.prompt-input input {
+  flex: 1;
+  padding: 0.8rem;
+  border-radius: 4px;
+  border: 1px solid #444;
+  background: #222;
+  color: white;
+}
+
+.game-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 800px;
+  margin: 0 auto;
+  width: 100%;
 }
