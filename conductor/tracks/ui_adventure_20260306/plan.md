@@ -1,6 +1,6 @@
 # Implementation Plan: Create the UI for the Adventure Game
 
-## Phase 1: Foundation & Core UI Components
+## Phase 1: Foundation & Core UI Components [checkpoint: ef270a0]
 - [x] Task: Project Scaffolding [3371c1f]
     - [x] Initialize React project with TypeScript
     - [x] Install necessary dependencies (e.g., gRPC client, state management)
@@ -13,7 +13,7 @@
 - [x] Task: Prompt Input Component [3371c1f]
     - [x] Write unit tests for the `PromptInput` component
     - [x] Implement a text field and submit button
-- [~] Task: Conductor - User Manual Verification 'Foundation & Core UI Components' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Foundation & Core UI Components' (Protocol in workflow.md) [ef270a0]
 
 ## Phase 2: State Management & Integration
 - [ ] Task: Basic State Management
