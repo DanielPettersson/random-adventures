@@ -234,11 +234,17 @@ h1 {
     #1a1a1a 75%
   );
   background-size: 200% 100%;
-  animation: shimmer 2s infinite linear;
+  animation: shimmer 2s infinite linear, magicalPulse 3s infinite ease-in-out;
   box-shadow: 0 0 10px rgba(212, 175, 55, 0.05);
 }
 
 @keyframes shimmer {
   0% { background-position: -200% 0; }
   100% { background-position: 200% 0; }
+}
+
+@keyframes magicalPulse {
+  0% { box-shadow: 0 0 5px rgba(212, 175, 55, 0.1); }
+  50% { box-shadow: 0 0 20px rgba(212, 175, 55, 0.3); }
+  100% { box-shadow: 0 0 5px rgba(212, 175, 55, 0.1); }
 }
