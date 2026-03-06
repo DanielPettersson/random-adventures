@@ -15,7 +15,7 @@ import (
 
 type testMockGeminiClient struct{}
 
-func (m *testMockGeminiClient) GenerateContent(ctx context.Context, model string, prompt string) (string, error) {
+func (m *testMockGeminiClient) GenerateContent(ctx context.Context, model string, systemInstruction string, prompt string) (string, error) {
 	return "AI generated adventure", nil
 }
 

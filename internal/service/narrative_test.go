@@ -10,12 +10,12 @@ import (
 )
 
 type mockGeminiClient struct {
-	generateContentFunc func(ctx context.Context, model string, prompt string) (string, error)
+	generateContentFunc func(ctx context.Context, model string, systemInstruction string, prompt string) (string, error)
 	generateImageFunc   func(ctx context.Context, model string, prompt string) ([]byte, error)
 }
 
-func (m *mockGeminiClient) GenerateContent(ctx context.Context, model string, prompt string) (string, error) {
-	return m.generateContentFunc(ctx, model, prompt)
+func (m *mockGeminiClient) GenerateContent(ctx context.Context, model string, systemInstruction string, prompt string) (string, error) {
+	return m.generateContentFunc(ctx, model, systemInstruction, prompt)
 }
 
 func (m *mockGeminiClient) GenerateImage(ctx context.Context, model string, prompt string) ([]byte, error) {
@@ -24,7 +24,7 @@ func (m *mockGeminiClient) GenerateImage(ctx context.Context, model string, prom
 
 func TestGenerateNarrative_Success(t *testing.T) {
 	mockClient := &mockGeminiClient{
-		generateContentFunc: func(ctx context.Context, model string, prompt string) (string, error) {
+		generateContentFunc: func(ctx context.Context, model string, systemInstruction string, prompt string) (string, error) {
 			return "AI generated story", nil
 		},
 	}

@@ -11,7 +11,7 @@ import (
 )
 
 type GeminiClient interface {
-	GenerateContent(ctx context.Context, model string, prompt string) (string, error)
+	GenerateContent(ctx context.Context, model string, systemInstruction string, prompt string) (string, error)
 	GenerateImage(ctx context.Context, model string, prompt string) ([]byte, error)
 }
 
@@ -37,7 +37,7 @@ func (s *NarrativeService) GenerateNarrative(
 		}
 	}
 
-	text, err := s.genaiClient.GenerateContent(ctx, "gemini-3-flash-preview", prompt)
+	text, err := s.genaiClient.GenerateContent(ctx, "gemini-3-flash-preview", "", prompt)
 	if err != nil {
 		return nil, connect.NewError(connect.CodeInternal, fmt.Errorf("failed to generate narrative: %v", err))
 	}
@@ -69,8 +69,18 @@ func NewRealGeminiClient(client *genai.Client) GeminiClient {
 	return &realGeminiClient{client: client}
 }
 
-func (r *realGeminiClient) GenerateContent(ctx context.Context, model string, prompt string) (string, error) {
-	result, err := r.client.Models.GenerateContent(ctx, model, genai.Text(prompt), nil)
+func (r *realGeminiClient) GenerateContent(ctx context.Context, model string, systemInstruction string, prompt string) (string, error) {
+	var config *genai.GenerateContentConfig
+	if systemInstruction != "" {
+		config = &genai.GenerateContentConfig{
+			SystemInstruction: &genai.Content{
+				Parts: []*genai.Part{
+					{Text: systemInstruction},
+				},
+			},
+		}
+	}
+	result, err := r.client.Models.GenerateContent(ctx, model, genai.Text(prompt), config)
 	if err != nil {
 		return "", err
 	}
