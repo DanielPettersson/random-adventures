@@ -8,12 +8,12 @@
 - [x] Task: Conductor - User Manual Verification 'Update Proto Definitions' (Protocol in workflow.md) f45184c
 
 ### Task: Backend Narrative Service Update
-- [ ] **Red Phase:** Write failing tests in `internal/service/narrative_test.go` to verify that the photo is received and included in the image generation prompt.
-- [ ] **Green Phase:** Implement the logic in `internal/service/narrative.go` to parse the photo from the RPC request.
-- [ ] **Green Phase:** Update the image generation prompt to include the player photo and the realism keywords.
-- [ ] **Refactor:** Clean up the prompt construction logic.
-- [ ] Verify coverage (>80%) for new code.
-- [ ] Task: Conductor - User Manual Verification 'Backend Narrative Service Update' (Protocol in workflow.md)
+- [x] **Red Phase:** Write failing tests in `internal/service/narrative_test.go` to verify that the photo is received and included in the image generation prompt. 198090e
+- [x] **Green Phase:** Implement the logic in `internal/service/narrative.go` to parse the photo from the RPC request. 198090e
+- [x] **Green Phase:** Update the image generation prompt to include the player photo and the realism keywords. 198090e
+- [x] **Refactor:** Clean up the prompt construction logic. 198090e
+- [x] Verify coverage (>80%) for new code. 198090e
+- [x] Task: Conductor - User Manual Verification 'Backend Narrative Service Update' (Protocol in workflow.md) 198090e
 
 ## Phase 2: Frontend Implementation
 
