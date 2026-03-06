@@ -19,7 +19,7 @@
 - [x] Task: Conductor - User Manual Verification 'Integration & Visual Effects' (Protocol in workflow.md) [a20eaae]
 
 ## Phase 3: Polishing
-- [ ] Task: Accessibility & Final Tweaks
-    - [ ] Ensure loading states are aria-compliant
-    - [ ] Finalize animation timings and transition curves
-- [ ] Task: Conductor - User Manual Verification 'Polishing' (Protocol in workflow.md)
+- [x] Task: Accessibility & Final Tweaks
+    - [x] Ensure loading states are aria-compliant
+    - [x] Finalize animation timings and transition curves
+- [~] Task: Conductor - User Manual Verification 'Polishing' (Protocol in workflow.md)
