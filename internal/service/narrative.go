@@ -14,6 +14,7 @@ import (
 type GeminiClient interface {
 	GenerateContent(ctx context.Context, model string, systemInstruction string, prompt string) (string, error)
 	GenerateImage(ctx context.Context, model string, prompt string, imageData []byte) ([]byte, error)
+	GenerateAudio(ctx context.Context, model string, text string) ([]byte, error)
 }
 
 type NarrativeService struct {
@@ -88,6 +89,18 @@ func (s *NarrativeService) GenerateImage(
 	}
 
 	return connect.NewResponse(&narrative.GenerateImageResponse{ImageData: generatedImage}), nil
+}
+
+func (s *NarrativeService) GenerateAudio(
+	ctx context.Context,
+	req *connect.Request[narrative.GenerateAudioRequest],
+) (*connect.Response[narrative.GenerateAudioResponse], error) {
+	audioData, err := s.genaiClient.GenerateAudio(ctx, "gemini-3.5-flash-preview", req.Msg.Text)
+	if err != nil {
+		return nil, connect.NewError(connect.CodeInternal, fmt.Errorf("failed to generate audio: %v", err))
+	}
+
+	return connect.NewResponse(&narrative.GenerateAudioResponse{AudioData: audioData}), nil
 }
 
 // realGeminiClient implements GeminiClient using the actual GenAI client
@@ -168,6 +181,29 @@ func (r *realGeminiClient) GenerateImage(ctx context.Context, model string, prom
 	}
 
 	return nil, fmt.Errorf("no image found in response")
+}
+
+func (r *realGeminiClient) GenerateAudio(ctx context.Context, model string, text string) ([]byte, error) {
+	config := &genai.GenerateContentConfig{
+		ResponseModalities: []string{"AUDIO"},
+	}
+
+	resp, err := r.client.Models.GenerateContent(ctx, model, genai.Text(text), config)
+	if err != nil {
+		return nil, err
+	}
+	if len(resp.Candidates) == 0 {
+		return nil, fmt.Errorf("no candidates returned")
+	}
+
+	candidate := resp.Candidates[0]
+	for _, part := range candidate.Content.Parts {
+		if part.InlineData != nil && part.InlineData.MIMEType == "audio/mpeg" {
+			return part.InlineData.Data, nil
+		}
+	}
+
+	return nil, fmt.Errorf("no audio found in response")
 }
 
 // Verify that NarrativeService implements the handler interface

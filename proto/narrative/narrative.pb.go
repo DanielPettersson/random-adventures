@@ -133,6 +133,102 @@ func (x *GenerateNarrativeResponse) GetText() string {
 	return ""
 }
 
+type GenerateAudioRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Text          string                 `protobuf:"bytes,1,opt,name=text,proto3" json:"text,omitempty"`
+	Language      string                 `protobuf:"bytes,2,opt,name=language,proto3" json:"language,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GenerateAudioRequest) Reset() {
+	*x = GenerateAudioRequest{}
+	mi := &file_proto_narrative_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GenerateAudioRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GenerateAudioRequest) ProtoMessage() {}
+
+func (x *GenerateAudioRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_narrative_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GenerateAudioRequest.ProtoReflect.Descriptor instead.
+func (*GenerateAudioRequest) Descriptor() ([]byte, []int) {
+	return file_proto_narrative_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *GenerateAudioRequest) GetText() string {
+	if x != nil {
+		return x.Text
+	}
+	return ""
+}
+
+func (x *GenerateAudioRequest) GetLanguage() string {
+	if x != nil {
+		return x.Language
+	}
+	return ""
+}
+
+type GenerateAudioResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	AudioData     []byte                 `protobuf:"bytes,1,opt,name=audio_data,json=audioData,proto3" json:"audio_data,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GenerateAudioResponse) Reset() {
+	*x = GenerateAudioResponse{}
+	mi := &file_proto_narrative_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GenerateAudioResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GenerateAudioResponse) ProtoMessage() {}
+
+func (x *GenerateAudioResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_narrative_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GenerateAudioResponse.ProtoReflect.Descriptor instead.
+func (*GenerateAudioResponse) Descriptor() ([]byte, []int) {
+	return file_proto_narrative_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *GenerateAudioResponse) GetAudioData() []byte {
+	if x != nil {
+		return x.AudioData
+	}
+	return nil
+}
+
 type GenerateImageRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Prompt        string                 `protobuf:"bytes,1,opt,name=prompt,proto3" json:"prompt,omitempty"`
@@ -143,7 +239,7 @@ type GenerateImageRequest struct {
 
 func (x *GenerateImageRequest) Reset() {
 	*x = GenerateImageRequest{}
-	mi := &file_proto_narrative_proto_msgTypes[2]
+	mi := &file_proto_narrative_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -155,7 +251,7 @@ func (x *GenerateImageRequest) String() string {
 func (*GenerateImageRequest) ProtoMessage() {}
 
 func (x *GenerateImageRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_narrative_proto_msgTypes[2]
+	mi := &file_proto_narrative_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -168,7 +264,7 @@ func (x *GenerateImageRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GenerateImageRequest.ProtoReflect.Descriptor instead.
 func (*GenerateImageRequest) Descriptor() ([]byte, []int) {
-	return file_proto_narrative_proto_rawDescGZIP(), []int{2}
+	return file_proto_narrative_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *GenerateImageRequest) GetPrompt() string {
@@ -194,7 +290,7 @@ type GenerateImageResponse struct {
 
 func (x *GenerateImageResponse) Reset() {
 	*x = GenerateImageResponse{}
-	mi := &file_proto_narrative_proto_msgTypes[3]
+	mi := &file_proto_narrative_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -206,7 +302,7 @@ func (x *GenerateImageResponse) String() string {
 func (*GenerateImageResponse) ProtoMessage() {}
 
 func (x *GenerateImageResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_narrative_proto_msgTypes[3]
+	mi := &file_proto_narrative_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -219,7 +315,7 @@ func (x *GenerateImageResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GenerateImageResponse.ProtoReflect.Descriptor instead.
 func (*GenerateImageResponse) Descriptor() ([]byte, []int) {
-	return file_proto_narrative_proto_rawDescGZIP(), []int{3}
+	return file_proto_narrative_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *GenerateImageResponse) GetImageData() []byte {
@@ -240,17 +336,24 @@ const file_proto_narrative_proto_rawDesc = "" +
 	"\ahistory\x18\x03 \x03(\tR\ahistory\x12\x1a\n" +
 	"\blanguage\x18\x04 \x01(\tR\blanguage\"/\n" +
 	"\x19GenerateNarrativeResponse\x12\x12\n" +
-	"\x04text\x18\x01 \x01(\tR\x04text\"g\n" +
+	"\x04text\x18\x01 \x01(\tR\x04text\"F\n" +
+	"\x14GenerateAudioRequest\x12\x12\n" +
+	"\x04text\x18\x01 \x01(\tR\x04text\x12\x1a\n" +
+	"\blanguage\x18\x02 \x01(\tR\blanguage\"6\n" +
+	"\x15GenerateAudioResponse\x12\x1d\n" +
+	"\n" +
+	"audio_data\x18\x01 \x01(\fR\taudioData\"g\n" +
 	"\x14GenerateImageRequest\x12\x16\n" +
 	"\x06prompt\x18\x01 \x01(\tR\x06prompt\x12&\n" +
 	"\fplayer_photo\x18\x02 \x01(\tH\x00R\vplayerPhoto\x88\x01\x01B\x0f\n" +
 	"\r_player_photo\"6\n" +
 	"\x15GenerateImageResponse\x12\x1d\n" +
 	"\n" +
-	"image_data\x18\x01 \x01(\fR\timageData2\xc6\x01\n" +
+	"image_data\x18\x01 \x01(\fR\timageData2\x9a\x02\n" +
 	"\x10NarrativeService\x12^\n" +
 	"\x11GenerateNarrative\x12#.narrative.GenerateNarrativeRequest\x1a$.narrative.GenerateNarrativeResponse\x12R\n" +
-	"\rGenerateImage\x12\x1f.narrative.GenerateImageRequest\x1a .narrative.GenerateImageResponseB#Z!random-adventures/proto/narrativeb\x06proto3"
+	"\rGenerateImage\x12\x1f.narrative.GenerateImageRequest\x1a .narrative.GenerateImageResponse\x12R\n" +
+	"\rGenerateAudio\x12\x1f.narrative.GenerateAudioRequest\x1a .narrative.GenerateAudioResponseB#Z!random-adventures/proto/narrativeb\x06proto3"
 
 var (
 	file_proto_narrative_proto_rawDescOnce sync.Once
@@ -264,20 +367,24 @@ func file_proto_narrative_proto_rawDescGZIP() []byte {
 	return file_proto_narrative_proto_rawDescData
 }
 
-var file_proto_narrative_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_proto_narrative_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_proto_narrative_proto_goTypes = []any{
 	(*GenerateNarrativeRequest)(nil),  // 0: narrative.GenerateNarrativeRequest
 	(*GenerateNarrativeResponse)(nil), // 1: narrative.GenerateNarrativeResponse
-	(*GenerateImageRequest)(nil),      // 2: narrative.GenerateImageRequest
-	(*GenerateImageResponse)(nil),     // 3: narrative.GenerateImageResponse
+	(*GenerateAudioRequest)(nil),      // 2: narrative.GenerateAudioRequest
+	(*GenerateAudioResponse)(nil),     // 3: narrative.GenerateAudioResponse
+	(*GenerateImageRequest)(nil),      // 4: narrative.GenerateImageRequest
+	(*GenerateImageResponse)(nil),     // 5: narrative.GenerateImageResponse
 }
 var file_proto_narrative_proto_depIdxs = []int32{
 	0, // 0: narrative.NarrativeService.GenerateNarrative:input_type -> narrative.GenerateNarrativeRequest
-	2, // 1: narrative.NarrativeService.GenerateImage:input_type -> narrative.GenerateImageRequest
-	1, // 2: narrative.NarrativeService.GenerateNarrative:output_type -> narrative.GenerateNarrativeResponse
-	3, // 3: narrative.NarrativeService.GenerateImage:output_type -> narrative.GenerateImageResponse
-	2, // [2:4] is the sub-list for method output_type
-	0, // [0:2] is the sub-list for method input_type
+	4, // 1: narrative.NarrativeService.GenerateImage:input_type -> narrative.GenerateImageRequest
+	2, // 2: narrative.NarrativeService.GenerateAudio:input_type -> narrative.GenerateAudioRequest
+	1, // 3: narrative.NarrativeService.GenerateNarrative:output_type -> narrative.GenerateNarrativeResponse
+	5, // 4: narrative.NarrativeService.GenerateImage:output_type -> narrative.GenerateImageResponse
+	3, // 5: narrative.NarrativeService.GenerateAudio:output_type -> narrative.GenerateAudioResponse
+	3, // [3:6] is the sub-list for method output_type
+	0, // [0:3] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
@@ -288,14 +395,14 @@ func file_proto_narrative_proto_init() {
 	if File_proto_narrative_proto != nil {
 		return
 	}
-	file_proto_narrative_proto_msgTypes[2].OneofWrappers = []any{}
+	file_proto_narrative_proto_msgTypes[4].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_narrative_proto_rawDesc), len(file_proto_narrative_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   4,
+			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

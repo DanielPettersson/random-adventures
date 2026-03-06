@@ -13,6 +13,7 @@ import (
 type mockGeminiClient struct {
 	generateContentFunc func(ctx context.Context, model string, systemInstruction string, prompt string) (string, error)
 	generateImageFunc   func(ctx context.Context, model string, prompt string, imageData []byte) ([]byte, error)
+	generateAudioFunc   func(ctx context.Context, model string, text string) ([]byte, error)
 }
 
 func (m *mockGeminiClient) GenerateContent(ctx context.Context, model string, systemInstruction string, prompt string) (string, error) {
@@ -23,11 +24,16 @@ func (m *mockGeminiClient) GenerateImage(ctx context.Context, model string, prom
 	return m.generateImageFunc(ctx, model, prompt, imageData)
 }
 
+func (m *mockGeminiClient) GenerateAudio(ctx context.Context, model string, text string) ([]byte, error) {
+	return m.generateAudioFunc(ctx, model, text)
+}
+
 func TestGenerateNarrative_Success(t *testing.T) {
 	mockClient := &mockGeminiClient{
 		generateContentFunc: func(ctx context.Context, model string, systemInstruction string, prompt string) (string, error) {
 			return "AI generated story", nil
 		},
+		generateAudioFunc: nil,
 	}
 
 	s := NewNarrativeService(mockClient)
@@ -54,6 +60,7 @@ func TestGenerateNarrative_SystemInstruction(t *testing.T) {
 			capturedInstruction = systemInstruction
 			return "AI generated story", nil
 		},
+		generateAudioFunc: nil,
 	}
 
 	s := NewNarrativeService(mockClient)
@@ -95,6 +102,7 @@ func TestGenerateNarrative_Error(t *testing.T) {
 		generateContentFunc: func(ctx context.Context, model string, systemInstruction string, prompt string) (string, error) {
 			return "", fmt.Errorf("API error")
 		},
+		generateAudioFunc: nil,
 	}
 
 	s := NewNarrativeService(mockClient)
@@ -115,6 +123,7 @@ func TestGenerateImage_Error(t *testing.T) {
 		generateImageFunc: func(ctx context.Context, model string, prompt string, imageData []byte) ([]byte, error) {
 			return nil, fmt.Errorf("API error")
 		},
+		generateAudioFunc: nil,
 	}
 
 	s := NewNarrativeService(mockClient)
@@ -136,6 +145,7 @@ func TestGenerateNarrative_History(t *testing.T) {
 			capturedPrompt = prompt
 			return "AI generated story", nil
 		},
+		generateAudioFunc: nil,
 	}
 
 	s := NewNarrativeService(mockClient)
@@ -160,6 +170,7 @@ func TestGenerateImage_Success(t *testing.T) {
 		generateImageFunc: func(ctx context.Context, model string, prompt string, imageData []byte) ([]byte, error) {
 			return []byte("fake-image-data"), nil
 		},
+		generateAudioFunc: nil,
 	}
 
 	s := NewNarrativeService(mockClient)
@@ -185,6 +196,7 @@ func TestGenerateImage_WithPlayerPhoto(t *testing.T) {
 			capturedPrompt = prompt
 			return []byte("fake-image-data"), nil
 		},
+		generateAudioFunc: nil,
 	}
 
 	s := NewNarrativeService(mockClient)
@@ -224,6 +236,7 @@ func TestGenerateImage_DecodingError(t *testing.T) {
 			capturedPrompt = prompt
 			return []byte("fake-image-data"), nil
 		},
+		generateAudioFunc: nil,
 	}
 
 	s := NewNarrativeService(mockClient)
@@ -246,5 +259,48 @@ func TestGenerateImage_DecodingError(t *testing.T) {
 
 	if !contains(capturedPrompt, "stylized") {
 		t.Errorf("Image prompt missing realism keywords: %q", capturedPrompt)
+	}
+}
+
+func TestGenerateAudio_Success(t *testing.T) {
+	mockClient := &mockGeminiClient{
+		generateAudioFunc: func(ctx context.Context, model string, text string) ([]byte, error) {
+			return []byte("fake-audio-data"), nil
+		},
+	}
+
+	s := NewNarrativeService(mockClient)
+
+	req := connect.NewRequest(&narrative.GenerateAudioRequest{
+		Text:     "Hello world",
+		Language: "English",
+	})
+	resp, err := s.GenerateAudio(context.Background(), req)
+
+	if err != nil {
+		t.Fatalf("Expected no error, got %v", err)
+	}
+
+	if string(resp.Msg.AudioData) != "fake-audio-data" {
+		t.Errorf("Expected 'fake-audio-data', got %v", string(resp.Msg.AudioData))
+	}
+}
+
+func TestGenerateAudio_Error(t *testing.T) {
+	mockClient := &mockGeminiClient{
+		generateAudioFunc: func(ctx context.Context, model string, text string) ([]byte, error) {
+			return nil, fmt.Errorf("API error")
+		},
+	}
+
+	s := NewNarrativeService(mockClient)
+
+	req := connect.NewRequest(&narrative.GenerateAudioRequest{
+		Text: "Hello world",
+	})
+	_, err := s.GenerateAudio(context.Background(), req)
+
+	if err == nil {
+		t.Fatal("Expected error, got nil")
 	}
 }

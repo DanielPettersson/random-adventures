@@ -7,6 +7,7 @@ option go_package = "random-adventures/proto/narrative";
 service NarrativeService {
   rpc GenerateNarrative(GenerateNarrativeRequest) returns (GenerateNarrativeResponse);
   rpc GenerateImage(GenerateImageRequest) returns (GenerateImageResponse);
+  rpc GenerateAudio(GenerateAudioRequest) returns (GenerateAudioResponse);
 }
 
 message GenerateNarrativeRequest {
@@ -18,6 +19,15 @@ message GenerateNarrativeRequest {
 
 message GenerateNarrativeResponse {
   string text = 1;
+}
+
+message GenerateAudioRequest {
+  string text = 1;
+  string language = 2;
+}
+
+message GenerateAudioResponse {
+  bytes audio_data = 1;
 }
 
 message GenerateImageRequest {

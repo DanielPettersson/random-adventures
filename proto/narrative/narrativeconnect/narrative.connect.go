@@ -39,12 +39,16 @@ const (
 	// NarrativeServiceGenerateImageProcedure is the fully-qualified name of the NarrativeService's
 	// GenerateImage RPC.
 	NarrativeServiceGenerateImageProcedure = "/narrative.NarrativeService/GenerateImage"
+	// NarrativeServiceGenerateAudioProcedure is the fully-qualified name of the NarrativeService's
+	// GenerateAudio RPC.
+	NarrativeServiceGenerateAudioProcedure = "/narrative.NarrativeService/GenerateAudio"
 )
 
 // NarrativeServiceClient is a client for the narrative.NarrativeService service.
 type NarrativeServiceClient interface {
 	GenerateNarrative(context.Context, *connect.Request[narrative.GenerateNarrativeRequest]) (*connect.Response[narrative.GenerateNarrativeResponse], error)
 	GenerateImage(context.Context, *connect.Request[narrative.GenerateImageRequest]) (*connect.Response[narrative.GenerateImageResponse], error)
+	GenerateAudio(context.Context, *connect.Request[narrative.GenerateAudioRequest]) (*connect.Response[narrative.GenerateAudioResponse], error)
 }
 
 // NewNarrativeServiceClient constructs a client for the narrative.NarrativeService service. By
@@ -70,6 +74,12 @@ func NewNarrativeServiceClient(httpClient connect.HTTPClient, baseURL string, op
 			connect.WithSchema(narrativeServiceMethods.ByName("GenerateImage")),
 			connect.WithClientOptions(opts...),
 		),
+		generateAudio: connect.NewClient[narrative.GenerateAudioRequest, narrative.GenerateAudioResponse](
+			httpClient,
+			baseURL+NarrativeServiceGenerateAudioProcedure,
+			connect.WithSchema(narrativeServiceMethods.ByName("GenerateAudio")),
+			connect.WithClientOptions(opts...),
+		),
 	}
 }
 
@@ -77,6 +87,7 @@ func NewNarrativeServiceClient(httpClient connect.HTTPClient, baseURL string, op
 type narrativeServiceClient struct {
 	generateNarrative *connect.Client[narrative.GenerateNarrativeRequest, narrative.GenerateNarrativeResponse]
 	generateImage     *connect.Client[narrative.GenerateImageRequest, narrative.GenerateImageResponse]
+	generateAudio     *connect.Client[narrative.GenerateAudioRequest, narrative.GenerateAudioResponse]
 }
 
 // GenerateNarrative calls narrative.NarrativeService.GenerateNarrative.
@@ -89,10 +100,16 @@ func (c *narrativeServiceClient) GenerateImage(ctx context.Context, req *connect
 	return c.generateImage.CallUnary(ctx, req)
 }
 
+// GenerateAudio calls narrative.NarrativeService.GenerateAudio.
+func (c *narrativeServiceClient) GenerateAudio(ctx context.Context, req *connect.Request[narrative.GenerateAudioRequest]) (*connect.Response[narrative.GenerateAudioResponse], error) {
+	return c.generateAudio.CallUnary(ctx, req)
+}
+
 // NarrativeServiceHandler is an implementation of the narrative.NarrativeService service.
 type NarrativeServiceHandler interface {
 	GenerateNarrative(context.Context, *connect.Request[narrative.GenerateNarrativeRequest]) (*connect.Response[narrative.GenerateNarrativeResponse], error)
 	GenerateImage(context.Context, *connect.Request[narrative.GenerateImageRequest]) (*connect.Response[narrative.GenerateImageResponse], error)
+	GenerateAudio(context.Context, *connect.Request[narrative.GenerateAudioRequest]) (*connect.Response[narrative.GenerateAudioResponse], error)
 }
 
 // NewNarrativeServiceHandler builds an HTTP handler from the service implementation. It returns the
@@ -114,12 +131,20 @@ func NewNarrativeServiceHandler(svc NarrativeServiceHandler, opts ...connect.Han
 		connect.WithSchema(narrativeServiceMethods.ByName("GenerateImage")),
 		connect.WithHandlerOptions(opts...),
 	)
+	narrativeServiceGenerateAudioHandler := connect.NewUnaryHandler(
+		NarrativeServiceGenerateAudioProcedure,
+		svc.GenerateAudio,
+		connect.WithSchema(narrativeServiceMethods.ByName("GenerateAudio")),
+		connect.WithHandlerOptions(opts...),
+	)
 	return "/narrative.NarrativeService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case NarrativeServiceGenerateNarrativeProcedure:
 			narrativeServiceGenerateNarrativeHandler.ServeHTTP(w, r)
 		case NarrativeServiceGenerateImageProcedure:
 			narrativeServiceGenerateImageHandler.ServeHTTP(w, r)
+		case NarrativeServiceGenerateAudioProcedure:
+			narrativeServiceGenerateAudioHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
@@ -135,4 +160,8 @@ func (UnimplementedNarrativeServiceHandler) GenerateNarrative(context.Context, *
 
 func (UnimplementedNarrativeServiceHandler) GenerateImage(context.Context, *connect.Request[narrative.GenerateImageRequest]) (*connect.Response[narrative.GenerateImageResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("narrative.NarrativeService.GenerateImage is not implemented"))
+}
+
+func (UnimplementedNarrativeServiceHandler) GenerateAudio(context.Context, *connect.Request[narrative.GenerateAudioRequest]) (*connect.Response[narrative.GenerateAudioResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("narrative.NarrativeService.GenerateAudio is not implemented"))
 }
