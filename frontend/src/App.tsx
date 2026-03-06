@@ -22,8 +22,8 @@ function App() {
         text: response.text
       }
       setSegments([initialSegment])
+      setIsLoading(false) // Text is here, skeleton replaced by segment, but image still generating
       
-      // Start image generation in background
       generateImage(response.text).then(imageData => {
         setSegments(prev => prev.map(s => 
           s.id === initialSegment.id ? { ...s, imageData } : s
@@ -32,7 +32,6 @@ function App() {
       
     } catch (error) {
       console.error("Failed to start adventure:", error)
-    } finally {
       setIsLoading(false)
     }
   }, [])
@@ -50,8 +49,8 @@ function App() {
         text: response.text
       }
       setSegments(prev => [...prev, newSegment])
+      setIsLoading(false) // Text is here
       
-      // Start image generation in background
       generateImage(response.text).then(imageData => {
         setSegments(prev => prev.map(s => 
           s.id === newSegment.id ? { ...s, imageData } : s
@@ -60,7 +59,6 @@ function App() {
       
     } catch (error) {
       console.error("Failed to continue adventure:", error)
-    } finally {
       setIsLoading(false)
     }
   }, [tone, segments])
@@ -82,7 +80,7 @@ function App() {
             <button onClick={handleReset}>Reset Adventure</button>
             <p>Tone: <strong>{tone}</strong></p>
           </div>
-          <AdventureFeed segments={segments} />
+          <AdventureFeed segments={segments} isGenerating={isLoading} />
           <PromptInput onSubmit={handlePromptSubmit} disabled={isLoading} />
         </>
       )}

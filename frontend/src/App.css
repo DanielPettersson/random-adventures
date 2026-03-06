@@ -97,6 +97,7 @@ h1 {
   overflow: hidden;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
   background: #111;
+  min-height: 200px; /* Ensure skeleton has height */
 }
 
 .segment-image img {
@@ -122,6 +123,7 @@ h1 {
   text-align: left;
   color: #e0e0e0;
   font-family: 'Merriweather', serif;
+  min-height: 100px; /* Ensure skeleton has height */
 }
 
 .prompt-input {
@@ -191,23 +193,31 @@ h1 {
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Loading Skeleton & Pulse Animation */
+/* Loading Skeleton & Pulse Glow Animation */
+.loading-skeleton {
+  border-bottom: 1px solid #d4af3733;
+  width: 100%;
+  min-height: 400px; /* Consistent height for first load */
+}
+
 .skeleton-image {
   width: 100%;
   aspect-ratio: 16/9;
-  background: #222;
+  background: #1a1a1a;
   border-radius: 8px;
+  min-height: 250px;
 }
 
 .skeleton-text {
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
+  min-height: 100px;
 }
 
 .skeleton-line {
   height: 1.25rem;
-  background: #222;
+  background: #1a1a1a;
   border-radius: 4px;
   width: 100%;
 }
@@ -216,43 +226,19 @@ h1 {
   width: 60%;
 }
 
-.pulse {
-  animation: skeletonPulse 1.5s ease-in-out infinite;
+.pulse-glow {
+  background: linear-gradient(
+    90deg,
+    #1a1a1a 25%,
+    #2a2a2a 50%,
+    #1a1a1a 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite linear;
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.05);
 }
 
-@keyframes skeletonPulse {
-  0% { opacity: 0.6; }
-  50% { opacity: 1; }
-  100% { opacity: 0.6; }
-}
-
-.magical-glow {
-  box-shadow: 0 0 15px rgba(212, 175, 55, 0.1);
-  border: 1px solid rgba(212, 175, 55, 0.2);
-  transition: box-shadow 0.5s ease;
-}
-
-.loading-skeleton {
-  border-style: dashed;
-}
-
-/* Loading Message Styles */
-.loading-message-container {
-  padding: 1rem;
-  text-align: center;
-  font-style: italic;
-  color: #d4af37;
-  min-height: 3rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.loading-message-text {
-  animation: messageFade 0.5s ease-in-out;
-}
-
-@keyframes messageFade {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
 }

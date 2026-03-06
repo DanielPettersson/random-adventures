@@ -1,4 +1,5 @@
 import React from 'react'
+import LoadingSkeleton from './LoadingSkeleton'
 
 export interface AdventureSegment {
   id: string
@@ -8,9 +9,10 @@ export interface AdventureSegment {
 
 interface AdventureFeedProps {
   segments: AdventureSegment[]
+  isGenerating?: boolean
 }
 
-const AdventureFeed: React.FC<AdventureFeedProps> = ({ segments }) => {
+const AdventureFeed: React.FC<AdventureFeedProps> = ({ segments, isGenerating }) => {
   return (
     <div className="adventure-feed">
       {segments.map((segment) => (
@@ -30,6 +32,7 @@ const AdventureFeed: React.FC<AdventureFeedProps> = ({ segments }) => {
           </div>
         </div>
       ))}
+      {isGenerating && <LoadingSkeleton />}
     </div>
   )
 }
