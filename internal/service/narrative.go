@@ -137,11 +137,29 @@ func (r *realGeminiClient) GenerateImage(ctx context.Context, model string, prom
 	if len(resp.Candidates) == 0 {
 		return nil, fmt.Errorf("no candidates returned")
 	}
-	for _, part := range resp.Candidates[0].Content.Parts {
+
+	// Log candidate info for debugging
+	candidate := resp.Candidates[0]
+	if candidate.FinishReason != "" && candidate.FinishReason != "STOP" {
+		fmt.Printf("Warning: Image generation finished with reason: %s. Safety ratings: %+v\n", candidate.FinishReason, candidate.SafetyRatings)
+	}
+
+	for _, part := range candidate.Content.Parts {
 		if part.InlineData != nil {
 			return part.InlineData.Data, nil
 		}
 	}
+
+	// Log the parts we did get
+	fmt.Printf("No image found. Candidate had %d parts. FinishReason: %s\n", len(candidate.Content.Parts), candidate.FinishReason)
+	for i, p := range candidate.Content.Parts {
+		if p.Text != "" {
+			fmt.Printf("Part %d: Text: %s\n", i, p.Text)
+		} else {
+			fmt.Printf("Part %d: (non-text, non-image)\n", i)
+		}
+	}
+
 	return nil, fmt.Errorf("no image found in response")
 }
 
