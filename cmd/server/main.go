@@ -4,17 +4,18 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"net"
+	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 
 	"random-adventures/internal/service"
-	narrative "random-adventures/proto"
+	"random-adventures/proto/narrative/narrativeconnect"
 
+	"github.com/rs/cors"
 	"google.golang.org/genai"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/reflection"
+	"golang.org/x/net/http2"
+	"golang.org/x/net/http2/h2c"
 )
 
 func main() {
@@ -23,7 +24,7 @@ func main() {
 	// Initialize GenAI client
 	genaiClient, err := genai.NewClient(ctx, nil)
 	if err != nil {
-		log.Fatalf("failed to create genAI client: %v", err)
+		log.Fatalf("failed to create genai client: %v", err)
 	}
 
 	port := os.Getenv("PORT")
@@ -31,23 +32,32 @@ func main() {
 		port = "50051"
 	}
 
-	lis, err := net.Listen("tcp", fmt.Sprintf(":%s", port))
-	if err != nil {
-		log.Fatalf("failed to listen: %v", err)
-	}
-
-	s := grpc.NewServer()
-
+	// Create narrative service
 	realClient := service.NewRealGeminiClient(genaiClient)
 	narrativeService := service.NewNarrativeService(realClient)
-	narrative.RegisterNarrativeServiceServer(s, narrativeService)
 
-	// Register reflection service on gRPC server.
-	reflection.Register(s)
+	// Create Connect handler
+	path, handler := narrativeconnect.NewNarrativeServiceHandler(narrativeService)
+
+	mux := http.NewServeMux()
+	mux.Handle(path, handler)
+
+	// CORS support
+	c := cors.New(cors.Options{
+		AllowedOrigins: []string{"http://localhost:5173"}, // Frontend dev server
+		AllowedMethods: []string{"GET", "POST", "OPTIONS"},
+		AllowedHeaders: []string{"Content-Type", "Connect-Protocol-Version", "X-User-Agent", "X-Grpc-Web"},
+		ExposedHeaders: []string{"Grpc-Status", "Grpc-Message", "Grpc-Status-Details-Bin"},
+	})
+
+	srv := &http.Server{
+		Addr:    fmt.Sprintf(":%s", port),
+		Handler: h2c.NewHandler(c.Handler(mux), &http2.Server{}),
+	}
 
 	go func() {
-		log.Printf("server listening at %v", lis.Addr())
-		if err := s.Serve(lis); err != nil {
+		log.Printf("server listening at %v", srv.Addr)
+		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			log.Fatalf("failed to serve: %v", err)
 		}
 	}()
@@ -60,6 +70,8 @@ func main() {
 	<-ch
 
 	log.Println("Stopping the server")
-	s.GracefulStop()
+	if err := srv.Shutdown(context.Background()); err != nil {
+		log.Fatalf("failed to shutdown: %v", err)
+	}
 	log.Println("End of Program")
 }

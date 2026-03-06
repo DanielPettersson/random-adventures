@@ -4,7 +4,9 @@ import (
 	"context"
 	"testing"
 
-	narrative "random-adventures/proto"
+	"random-adventures/proto/narrative"
+
+	"connectrpc.com/connect"
 )
 
 type mockGeminiClient struct {
@@ -29,18 +31,18 @@ func TestGenerateNarrative_Success(t *testing.T) {
 
 	s := NewNarrativeService(mockClient)
 
-	req := &narrative.GenerateNarrativeRequest{
+	req := connect.NewRequest(&narrative.GenerateNarrativeRequest{
 		Prompt: "Start an adventure",
 		Tone:   "Dark",
-	}
+	})
 	resp, err := s.GenerateNarrative(context.Background(), req)
 
 	if err != nil {
 		t.Fatalf("Expected no error, got %v", err)
 	}
 
-	if resp.Text != "AI generated story" {
-		t.Errorf("Expected 'AI generated story', got %v", resp.Text)
+	if resp.Msg.Text != "AI generated story" {
+		t.Errorf("Expected 'AI generated story', got %v", resp.Msg.Text)
 	}
 }
 
@@ -53,16 +55,16 @@ func TestGenerateImage_Success(t *testing.T) {
 
 	s := NewNarrativeService(mockClient)
 
-	req := &narrative.GenerateImageRequest{
+	req := connect.NewRequest(&narrative.GenerateImageRequest{
 		Prompt: "A dark forest",
-	}
+	})
 	resp, err := s.GenerateImage(context.Background(), req)
 
 	if err != nil {
 		t.Fatalf("Expected no error, got %v", err)
 	}
 
-	if string(resp.ImageData) != "fake-image-data" {
-		t.Errorf("Expected 'fake-image-data', got %v", string(resp.ImageData))
+	if string(resp.Msg.ImageData) != "fake-image-data" {
+		t.Errorf("Expected 'fake-image-data', got %v", string(resp.Msg.ImageData))
 	}
 }

@@ -3,20 +3,19 @@ package service
 import (
 	"context"
 	"fmt"
-	narrative "random-adventures/proto"
+	"random-adventures/proto/narrative"
+	"random-adventures/proto/narrative/narrativeconnect"
 
+	"connectrpc.com/connect"
 	"google.golang.org/genai"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 type GeminiClient interface {
-	GenerateContent(ctx context.Context, prompt string) (string, error)
-	GenerateImage(ctx context.Context, prompt string) ([]byte, error)
+	GenerateContent(ctx context.Context, model string, prompt string) (string, error)
+	GenerateImage(ctx context.Context, model string, prompt string) ([]byte, error)
 }
 
 type NarrativeService struct {
-	narrative.UnimplementedNarrativeServiceServer
 	genaiClient GeminiClient
 }
 
@@ -26,33 +25,39 @@ func NewNarrativeService(client GeminiClient) *NarrativeService {
 	}
 }
 
-func (s *NarrativeService) GenerateNarrative(ctx context.Context, req *narrative.GenerateNarrativeRequest) (*narrative.GenerateNarrativeResponse, error) {
-	prompt := fmt.Sprintf("Narrative Tone: %s. Prompt: %s", req.Tone, req.Prompt)
-	if len(req.History) > 0 {
+func (s *NarrativeService) GenerateNarrative(
+	ctx context.Context,
+	req *connect.Request[narrative.GenerateNarrativeRequest],
+) (*connect.Response[narrative.GenerateNarrativeResponse], error) {
+	prompt := fmt.Sprintf("Narrative Tone: %s. Prompt: %s", req.Msg.Tone, req.Msg.Prompt)
+	if len(req.Msg.History) > 0 {
 		prompt += "\nHistory:\n"
-		for _, h := range req.History {
+		for _, h := range req.Msg.History {
 			prompt += fmt.Sprintf("- %s\n", h)
 		}
 	}
 
-	text, err := s.genaiClient.GenerateContent(ctx, prompt)
+	text, err := s.genaiClient.GenerateContent(ctx, "gemini-3-flash-preview", prompt)
 	if err != nil {
-		return nil, status.Errorf(codes.Internal, "failed to generate narrative: %v", err)
+		return nil, connect.NewError(connect.CodeInternal, fmt.Errorf("failed to generate narrative: %v", err))
 	}
 
-	return &narrative.GenerateNarrativeResponse{Text: text}, nil
+	return connect.NewResponse(&narrative.GenerateNarrativeResponse{Text: text}), nil
 }
 
-func (s *NarrativeService) GenerateImage(ctx context.Context, req *narrative.GenerateImageRequest) (*narrative.GenerateImageResponse, error) {
+func (s *NarrativeService) GenerateImage(
+	ctx context.Context,
+	req *connect.Request[narrative.GenerateImageRequest],
+) (*connect.Response[narrative.GenerateImageResponse], error) {
 	// Stylized illustration support
-	prompt := fmt.Sprintf("A vibrant, stylized illustration of: %s. Art style: digital painting, expressive, atmospheric.", req.Prompt)
+	prompt := fmt.Sprintf("A vibrant, stylized illustration of: %s. Art style: digital painting, expressive, atmospheric.", req.Msg.Prompt)
 
-	imageData, err := s.genaiClient.GenerateImage(ctx, prompt)
+	imageData, err := s.genaiClient.GenerateImage(ctx, "gemini-3.1-flash-image-preview", prompt)
 	if err != nil {
-		return nil, status.Errorf(codes.Internal, "failed to generate image: %v", err)
+		return nil, connect.NewError(connect.CodeInternal, fmt.Errorf("failed to generate image: %v", err))
 	}
 
-	return &narrative.GenerateImageResponse{ImageData: imageData}, nil
+	return connect.NewResponse(&narrative.GenerateImageResponse{ImageData: imageData}), nil
 }
 
 // realGeminiClient implements GeminiClient using the actual GenAI client
@@ -64,19 +69,19 @@ func NewRealGeminiClient(client *genai.Client) GeminiClient {
 	return &realGeminiClient{client: client}
 }
 
-func (r *realGeminiClient) GenerateContent(ctx context.Context, prompt string) (string, error) {
-	result, err := r.client.Models.GenerateContent(ctx, "gemini-3-flash-preview", genai.Text(prompt), nil)
+func (r *realGeminiClient) GenerateContent(ctx context.Context, model string, prompt string) (string, error) {
+	result, err := r.client.Models.GenerateContent(ctx, model, genai.Text(prompt), nil)
 	if err != nil {
 		return "", err
 	}
 	return result.Text(), nil
 }
 
-func (r *realGeminiClient) GenerateImage(ctx context.Context, prompt string) ([]byte, error) {
+func (r *realGeminiClient) GenerateImage(ctx context.Context, model string, prompt string) ([]byte, error) {
 	config := &genai.GenerateContentConfig{
 		ResponseModalities: []string{"IMAGE"},
 	}
-	resp, err := r.client.Models.GenerateContent(ctx, "gemini-3.1-flash-image-preview", genai.Text(prompt), config)
+	resp, err := r.client.Models.GenerateContent(ctx, model, genai.Text(prompt), config)
 	if err != nil {
 		return nil, err
 	}
@@ -90,3 +95,6 @@ func (r *realGeminiClient) GenerateImage(ctx context.Context, prompt string) ([]
 	}
 	return nil, fmt.Errorf("no image found in response")
 }
+
+// Verify that NarrativeService implements the handler interface
+var _ narrativeconnect.NarrativeServiceHandler = (*NarrativeService)(nil)
