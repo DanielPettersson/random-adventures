@@ -9,4 +9,5 @@ A Go-based application that demonstrates basic interaction with Google's GenAI m
     - AI-generated text adventures for dynamic storytelling.
     - Multi-modal support for integrating AI-generated images to enhance the narrative.
     - Dynamic narrative paths that respond to user choices.
+    - **Immersive loading states** with skeleton screens and visual effects to maintain engagement during AI content generation.
 - **Delivery & Usage:** The application will be accessible through a web frontend, providing a seamless and interactive user interface for players.
