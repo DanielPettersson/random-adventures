@@ -95,7 +95,7 @@ func (s *NarrativeService) GenerateAudio(
 	ctx context.Context,
 	req *connect.Request[narrative.GenerateAudioRequest],
 ) (*connect.Response[narrative.GenerateAudioResponse], error) {
-	audioData, err := s.genaiClient.GenerateAudio(ctx, "gemini-3.5-flash-preview", req.Msg.Text)
+	audioData, err := s.genaiClient.GenerateAudio(ctx, "gemini-2.5-flash-preview-tts", req.Msg.Text)
 	if err != nil {
 		return nil, connect.NewError(connect.CodeInternal, fmt.Errorf("failed to generate audio: %v", err))
 	}

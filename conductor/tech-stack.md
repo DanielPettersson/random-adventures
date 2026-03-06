@@ -6,6 +6,7 @@
 - **AI Integration:** Google GenAI for Go (`google.golang.org/genai`) to power the game's narrative and image generation.
   - **Narrative Model:** `gemini-3-flash-preview`
   - **Image Model:** `gemini-3.1-flash-image-preview`
+  - **Audio Model:** `gemini-2.5-flash-preview-tts`
 
 ## Web Frontend
 - **Framework:** React with TypeScript (Vite) for a modern, component-based, and type-safe user interface.
