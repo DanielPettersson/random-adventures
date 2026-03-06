@@ -35,7 +35,7 @@ func (s *NarrativeService) GenerateNarrative(ctx context.Context, req *narrative
 		}
 	}
 
-	text, err := s.genaiClient.GenerateContent(ctx, "gemini-3-flash-preview", prompt)
+	text, err := s.genaiClient.GenerateContent(ctx, "gemini-3.0-flash-preview", prompt)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to generate narrative: %v", err)
 	}
@@ -47,7 +47,7 @@ func (s *NarrativeService) GenerateImage(ctx context.Context, req *narrative.Gen
 	// Stylized illustration support
 	prompt := fmt.Sprintf("A vibrant, stylized illustration of: %s. Art style: digital painting, expressive, atmospheric.", req.Prompt)
 
-	imageData, err := s.genaiClient.GenerateImage(ctx, "imagen-3.0-generate-001", prompt)
+	imageData, err := s.genaiClient.GenerateImage(ctx, "gemini-3.1-flash-image-preview", prompt)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to generate image: %v", err)
 	}
@@ -73,15 +73,20 @@ func (r *realGeminiClient) GenerateContent(ctx context.Context, model string, pr
 }
 
 func (r *realGeminiClient) GenerateImage(ctx context.Context, model string, prompt string) ([]byte, error) {
-	resp, err := r.client.Models.GenerateImages(ctx, model, prompt, nil)
+	config := &genai.GenerateContentConfig{
+		ResponseModalities: []string{"IMAGE"},
+	}
+	resp, err := r.client.Models.GenerateContent(ctx, model, genai.Text(prompt), config)
 	if err != nil {
 		return nil, err
 	}
-	if len(resp.GeneratedImages) == 0 {
-		return nil, fmt.Errorf("no images generated")
+	if len(resp.Candidates) == 0 {
+		return nil, fmt.Errorf("no candidates returned")
 	}
-	if resp.GeneratedImages[0].Image == nil {
-		return nil, fmt.Errorf("generated image is nil")
+	for _, part := range resp.Candidates[0].Content.Parts {
+		if part.InlineData != nil {
+			return part.InlineData.Data, nil
+		}
 	}
-	return resp.GeneratedImages[0].Image.ImageBytes, nil
+	return nil, fmt.Errorf("no image found in response")
 }
