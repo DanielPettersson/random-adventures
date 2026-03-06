@@ -36,3 +36,23 @@ export const generateImage = async (prompt: string, playerPhoto?: string) => {
   );
   return base64;
 };
+
+export const generateAudio = async (text: string, language: string) => {
+  const response = await client.generateAudio({
+    text,
+    language,
+  });
+
+  // Convert bytes to base64
+  const base64 = btoa(
+    new Uint8Array(response.audioData).reduce(
+      (data, byte) => data + String.fromCharCode(byte),
+      ""
+    )
+  );
+  
+  return {
+    audioData: base64,
+    mimeType: response.mimeType,
+  };
+};

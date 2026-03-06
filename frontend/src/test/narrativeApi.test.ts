@@ -31,4 +31,17 @@ describe('narrative api', () => {
     expect(result).toBeDefined()
     expect(typeof result).toBe('string')
   })
+
+  it('generateAudio calls the client and returns base64 and mimeType', async () => {
+    const mockAudioData = new Uint8Array([1, 2, 3])
+    const mockResponse = { audioData: mockAudioData, mimeType: 'audio/mpeg' }
+    const spy = vi.spyOn(narrativeApi.client, 'generateAudio').mockResolvedValue(mockResponse as any)
+
+    const result = await narrativeApi.generateAudio('Hello', 'English')
+    
+    expect(spy).toHaveBeenCalledWith({ text: 'Hello', language: 'English' })
+    expect(result.audioData).toBeDefined()
+    expect(typeof result.audioData).toBe('string')
+    expect(result.mimeType).toBe('audio/mpeg')
+  })
 })
