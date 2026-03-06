@@ -18,8 +18,8 @@
     - [x] Handle state transitions between "generating text" and "generating image"
 - [x] Task: Conductor - User Manual Verification 'Integration & Visual Effects' (Protocol in workflow.md) [a20eaae]
 
-## Phase 3: Polishing
-- [x] Task: Accessibility & Final Tweaks
+## Phase 3: Polishing [checkpoint: dd3ce43]
+- [x] Task: Accessibility & Final Tweaks [71e1ce1]
     - [x] Ensure loading states are aria-compliant
     - [x] Finalize animation timings and transition curves
-- [~] Task: Conductor - User Manual Verification 'Polishing' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Polishing' (Protocol in workflow.md) [dd3ce43]
