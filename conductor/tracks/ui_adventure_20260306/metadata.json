@@ -1,8 +1,0 @@
-{
-  "track_id": "ui_adventure_20260306",
-  "type": "feature",
-  "status": "new",
-  "created_at": "2026-03-06T12:00:00Z",
-  "updated_at": "2026-03-06T12:00:00Z",
-  "description": "Create the UI, it should support starting a new adventure selecting a narrative tone. Then for each returned narrative it should generate a matching image displaying it with the text. It should also have an input for typing the next prompt"
-}
