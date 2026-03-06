@@ -44,4 +44,54 @@ describe('narrative api', () => {
     expect(typeof result.audioData).toBe('string')
     expect(result.mimeType).toBe('audio/mpeg')
   })
+
+  it('playAudio creates a blob and plays it', () => {
+    const mockAudio = {
+      play: vi.fn().mockResolvedValue(undefined),
+      onended: null,
+    }
+    const AudioMock = vi.fn().mockImplementation(function() {
+      return mockAudio
+    })
+    vi.stubGlobal('Audio', AudioMock)
+    vi.stubGlobal('URL', {
+      createObjectURL: vi.fn().mockReturnValue('mock-url'),
+      revokeObjectURL: vi.fn(),
+    })
+    
+    const createObjectURLSpy = vi.mocked(URL.createObjectURL)
+
+    const base64Data = btoa(String.fromCharCode(1, 2, 3))
+    narrativeApi.playAudio(base64Data, 'audio/mpeg')
+
+    expect(AudioMock).toHaveBeenCalledWith('mock-url')
+    expect(mockAudio.play).toHaveBeenCalled()
+    expect(createObjectURLSpy).toHaveBeenCalled()
+    const blob = createObjectURLSpy.mock.calls[0][0] as Blob
+    expect(blob.type).toBe('audio/mpeg')
+  })
+
+  it('playAudio handles audio/L16 by adding WAV header', () => {
+    const mockAudio = {
+      play: vi.fn().mockResolvedValue(undefined),
+      onended: null,
+    }
+    const AudioMock = vi.fn().mockImplementation(function() {
+      return mockAudio
+    })
+    vi.stubGlobal('Audio', AudioMock)
+    vi.stubGlobal('URL', {
+      createObjectURL: vi.fn().mockReturnValue('mock-url'),
+      revokeObjectURL: vi.fn(),
+    })
+    const createObjectURLSpy = vi.mocked(URL.createObjectURL)
+
+    const base64Data = btoa(String.fromCharCode(1, 2, 3))
+    narrativeApi.playAudio(base64Data, 'audio/L16;rate=24000')
+
+    expect(createObjectURLSpy).toHaveBeenCalled()
+    const blob = createObjectURLSpy.mock.calls[0][0] as Blob
+    expect(blob.type).toBe('audio/wav')
+    expect(mockAudio.play).toHaveBeenCalled()
+  })
 })
