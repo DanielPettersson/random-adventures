@@ -46,7 +46,8 @@ function App() {
       const response = await generateNarrative(prompt, tone, history)
       const newSegment: AdventureSegment = {
         id: Date.now().toString(),
-        text: response.text
+        text: response.text,
+        prompt: prompt
       }
       setSegments(prev => [...prev, newSegment])
       setIsLoading(false) // Text is here

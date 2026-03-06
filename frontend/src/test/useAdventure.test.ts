@@ -20,16 +20,17 @@ describe('useAdventure', () => {
     expect(result.current.segments[0].text).toContain('Epic')
   })
 
-  it('adds a new segment', () => {
+  it('adds a new segment with prompt', () => {
     const { result } = renderHook(() => useAdventure())
     act(() => {
       result.current.selectTone('Dark')
     })
     act(() => {
-      result.current.addSegment('Go to the cave')
+      result.current.addSegment('The cave is cold.', 'Go to the cave')
     })
     expect(result.current.segments.length).toBe(2)
-    expect(result.current.segments[1].text).toBe('Go to the cave')
+    expect(result.current.segments[1].text).toBe('The cave is cold.')
+    expect(result.current.segments[1].prompt).toBe('Go to the cave')
   })
 
   it('updates a segment with image data', () => {

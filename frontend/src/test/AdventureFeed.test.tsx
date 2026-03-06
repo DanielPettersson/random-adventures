@@ -14,6 +14,15 @@ describe('AdventureFeed', () => {
     expect(screen.getByText(/Suddenly, a dragon appeared/i)).toBeInTheDocument()
   })
 
+  it('renders user prompts when provided', () => {
+    const segmentsWithPrompt = [
+      ...segments,
+      { id: '3', text: 'You found a treasure!', prompt: 'I open the chest' }
+    ]
+    render(<AdventureFeed segments={segmentsWithPrompt} />)
+    expect(screen.getByText(/I open the chest/i)).toBeInTheDocument()
+  })
+
   it('renders images when imageData is provided', () => {
     render(<AdventureFeed segments={segments} />)
     const images = screen.getAllByRole('img')

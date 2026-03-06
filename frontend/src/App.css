@@ -77,11 +77,11 @@ h1 {
 .adventure-feed {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 3rem; /* Increased gap to accommodate prompts */
   max-width: 900px;
   margin: 0 auto;
   width: 100%;
-  padding: 1rem 2rem;
+  padding: 2rem;
   border: 1px solid #333;
   border-radius: 12px;
   background: rgba(20, 20, 20, 0.8);
@@ -93,13 +93,38 @@ h1 {
   box-sizing: border-box;
 }
 
+.adventure-segment-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  animation: slideIn 0.5s ease-out;
+}
+
+.user-prompt {
+  align-self: flex-end;
+  background: #2a2a2a;
+  border: 1px solid #444;
+  padding: 0.5rem 1.5rem;
+  border-radius: 20px 20px 0 20px;
+  max-width: 80%;
+  margin-right: 1rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+.user-prompt p {
+  margin: 0;
+  font-style: italic;
+  color: #d4af37;
+  font-size: 1.1rem;
+}
+
 .adventure-segment {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  padding-bottom: 2rem;
+  padding-bottom: 2.5rem;
   border-bottom: 1px solid #222;
-  animation: slideIn 0.5s ease-out;
 }
 
 .segment-image {

@@ -16,9 +16,9 @@ export const useAdventure = () => {
     return initialSegment.id
   }, [])
 
-  const addSegment = useCallback((text: string) => {
+  const addSegment = useCallback((text: string, prompt?: string) => {
     const id = Date.now().toString()
-    const newSegment: AdventureSegment = { id, text }
+    const newSegment: AdventureSegment = { id, text, prompt }
     setSegments((prev) => [...prev, newSegment])
     return id
   }, [])
