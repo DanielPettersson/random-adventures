@@ -290,6 +290,71 @@ func TestGenerateAudio_Success(t *testing.T) {
 	}
 }
 
+func TestGenerateImage_Retry(t *testing.T) {
+	callCount := 0
+	var capturedPrompts []string
+	mockClient := &mockGeminiClient{
+		generateImageFunc: func(ctx context.Context, model string, prompt string, imageData []byte) ([]byte, error) {
+			callCount++
+			capturedPrompts = append(capturedPrompts, prompt)
+			if callCount == 1 {
+				return nil, fmt.Errorf("first attempt failed")
+			}
+			return []byte("retry-image-data"), nil
+		},
+	}
+
+	s := NewNarrativeService(mockClient)
+
+	req := connect.NewRequest(&narrative.GenerateImageRequest{
+		Prompt: "Complex story segment",
+	})
+	resp, err := s.GenerateImage(context.Background(), req)
+
+	if err != nil {
+		t.Fatalf("Expected no error after retry, got %v", err)
+	}
+
+	if callCount != 2 {
+		t.Errorf("Expected 2 calls to GenerateImage, got %d", callCount)
+	}
+
+	if string(resp.Msg.ImageData) != "retry-image-data" {
+		t.Errorf("Expected 'retry-image-data', got %v", string(resp.Msg.ImageData))
+	}
+
+	if !contains(capturedPrompts[1], "A cinematic scene illustrating the story") {
+		t.Errorf("Second attempt should use simple prompt, got %q", capturedPrompts[1])
+	}
+}
+
+func TestGenerateImage_PromptCleaning(t *testing.T) {
+	var capturedPrompt string
+	mockClient := &mockGeminiClient{
+		generateImageFunc: func(ctx context.Context, model string, prompt string, imageData []byte) ([]byte, error) {
+			capturedPrompt = prompt
+			return []byte("fake-image-data"), nil
+		},
+	}
+
+	s := NewNarrativeService(mockClient)
+
+	// A prompt ending with a question
+	inputPrompt := "You see a dark cave. There are eyes glowing in the dark. What do you do?"
+	req := connect.NewRequest(&narrative.GenerateImageRequest{
+		Prompt: inputPrompt,
+	})
+	_, _ = s.GenerateImage(context.Background(), req)
+
+	if contains(capturedPrompt, "What do you do?") {
+		t.Errorf("Cleaned prompt should NOT contain the question: %q", capturedPrompt)
+	}
+
+	if !contains(capturedPrompt, "You see a dark cave") {
+		t.Errorf("Cleaned prompt missing core story: %q", capturedPrompt)
+	}
+}
+
 func TestGenerateAudio_Error(t *testing.T) {
 	mockClient := &mockGeminiClient{
 		generateAudioFunc: func(ctx context.Context, model string, text string) ([]byte, string, error) {

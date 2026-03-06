@@ -65,7 +65,7 @@ func (s *NarrativeService) GenerateImage(
 	ctx context.Context,
 	req *connect.Request[narrative.GenerateImageRequest],
 ) (*connect.Response[narrative.GenerateImageResponse], error) {
-	prompt := req.Msg.Prompt
+	originalPrompt := req.Msg.Prompt
 	var imageData []byte
 	var err error
 
@@ -75,20 +75,71 @@ func (s *NarrativeService) GenerateImage(
 		if err != nil {
 			// Fallback to text only if decoding fails
 			fmt.Printf("Warning: failed to decode player photo: %v\n", err)
-		} else {
-			prompt = fmt.Sprintf("The person in the attached photo is the protagonist. %s", prompt)
 		}
 	}
 
-	// Update the prompt with realism keywords as per spec
-	prompt = fmt.Sprintf("%s. Style: photorealistic, stylized, vibrant, expressive, atmospheric.", prompt)
+	// Helper to build the final prompt
+	buildPrompt := func(p string, hasPhoto bool) string {
+		if hasPhoto {
+			p = fmt.Sprintf("The person in the attached photo is the protagonist. %s", p)
+		}
+		return fmt.Sprintf("%s. Style: photorealistic, stylized, vibrant, expressive, atmospheric.", p)
+	}
 
-	generatedImage, err := s.genaiClient.GenerateImage(ctx, "gemini-3.1-flash-image-preview", prompt, imageData)
+	// Try with cleaned prompt first
+	cleanedPrompt := cleanPromptForImage(originalPrompt)
+	finalPrompt := buildPrompt(cleanedPrompt, len(imageData) > 0 && err == nil)
+
+	generatedImage, err := s.genaiClient.GenerateImage(ctx, "gemini-3.1-flash-image-preview", finalPrompt, imageData)
 	if err != nil {
-		return nil, connect.NewError(connect.CodeInternal, fmt.Errorf("failed to generate image: %v", err))
+		fmt.Printf("Warning: Image generation failed (try 1): %v. Retrying with simple prompt...\n", err)
+		// Retry with a very simple summary if the full narrative was too much
+		simplePrompt := "A cinematic scene illustrating the story."
+		finalSimplePrompt := buildPrompt(simplePrompt, len(imageData) > 0)
+		generatedImage, err = s.genaiClient.GenerateImage(ctx, "gemini-3.1-flash-image-preview", finalSimplePrompt, imageData)
+		if err != nil {
+			return nil, connect.NewError(connect.CodeInternal, fmt.Errorf("failed to generate image after retry: %v", err))
+		}
 	}
 
 	return connect.NewResponse(&narrative.GenerateImageResponse{ImageData: generatedImage}), nil
+}
+
+// cleanPromptForImage removes questions and non-visual elements from the narrative
+func cleanPromptForImage(prompt string) string {
+	// Remove the closing question if it exists (usually the last sentence)
+	// We look for the last question mark and take everything before it if it's near the end
+	lastQ := -1
+	for i, char := range prompt {
+		if char == '?' {
+			lastQ = i
+		}
+	}
+
+	if lastQ != -1 && lastQ > len(prompt)-200 {
+		// Find the start of the last sentence before the question
+		// Or just take everything before the question mark
+		prompt = prompt[:lastQ]
+		// Try to find the last period before this question mark to avoid partial sentences
+		lastPeriod := -1
+		for i := lastQ - 1; i >= 0; i-- {
+			if prompt[i] == '.' || prompt[i] == '!' {
+				lastPeriod = i
+				break
+			}
+		}
+		if lastPeriod != -1 {
+			// Include the period
+			prompt = prompt[:lastPeriod+1]
+		}
+	}
+
+	// Limit length to avoid overwhelming the image generator
+	if len(prompt) > 400 {
+		prompt = prompt[:400] + "..."
+	}
+
+	return prompt
 }
 
 func (s *NarrativeService) GenerateAudio(
@@ -161,7 +212,7 @@ func (r *realGeminiClient) GenerateImage(ctx context.Context, model string, prom
 	// Log candidate info for debugging
 	candidate := resp.Candidates[0]
 	if candidate.FinishReason != "" && candidate.FinishReason != "STOP" {
-		fmt.Printf("Warning: Image generation finished with reason: %s. Safety ratings: %+v\n", candidate.FinishReason, candidate.SafetyRatings)
+		return nil, fmt.Errorf("image generation finished with reason: %s (safety: %+v)", candidate.FinishReason, candidate.SafetyRatings)
 	}
 
 	for _, part := range candidate.Content.Parts {
@@ -198,8 +249,8 @@ func (r *realGeminiClient) GenerateAudio(ctx context.Context, model string, text
 
 	candidate := resp.Candidates[0]
 	for _, part := range candidate.Content.Parts {
-		if part.InlineData != nil && (part.InlineData.MIMEType == "audio/mpeg" || 
-			part.InlineData.MIMEType == "audio/mp3" || 
+		if part.InlineData != nil && (part.InlineData.MIMEType == "audio/mpeg" ||
+			part.InlineData.MIMEType == "audio/mp3" ||
 			part.InlineData.MIMEType == "audio/L16;codec=pcm;rate=24000" ||
 			part.InlineData.MIMEType == "audio/L16") {
 			return part.InlineData.Data, part.InlineData.MIMEType, nil
