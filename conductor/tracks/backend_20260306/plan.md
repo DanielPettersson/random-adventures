@@ -13,12 +13,12 @@
 - [x] Task: Conductor - User Manual Verification 'Foundation & API Definition' (Protocol in workflow.md) [5cfaeef]
 
 ## Phase 2: Narrative Generation Logic
-- [ ] Task: Integrate Gemini for narrative generation
-    - [ ] Write tests for the narrative service (mocking the GenAI client)
-    - [ ] Implement Gemini client integration and `GenerateNarrative` logic
-- [ ] Task: Implement Narrative gRPC Endpoint
-    - [ ] Write integration tests for the `GenerateNarrative` gRPC endpoint
-    - [ ] Implement the handler for narrative generation in the gRPC server
+- [x] Task: Integrate Gemini for narrative generation
+    - [x] Write tests for the narrative service (mocking the GenAI client)
+    - [x] Implement Gemini client integration and `GenerateNarrative` logic
+- [x] Task: Implement Narrative gRPC Endpoint
+    - [x] Write integration tests for the `GenerateNarrative` gRPC endpoint
+    - [x] Implement the handler for narrative generation in the gRPC server
 - [ ] Task: Conductor - User Manual Verification 'Narrative Generation Logic' (Protocol in workflow.md)
 
 ## Phase 3: Multi-modal & Image Support

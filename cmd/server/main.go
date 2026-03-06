@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net"
@@ -11,11 +12,20 @@ import (
 	"random-adventures/internal/service"
 	narrative "random-adventures/proto"
 
+	"google.golang.org/genai"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
 
 func main() {
+	ctx := context.Background()
+
+	// Initialize GenAI client
+	genaiClient, err := genai.NewClient(ctx, nil)
+	if err != nil {
+		log.Fatalf("failed to create genai client: %v", err)
+	}
+
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "50051"
@@ -27,7 +37,10 @@ func main() {
 	}
 
 	s := grpc.NewServer()
-	narrativeService := service.NewNarrativeService()
+	
+	// Create narrative service with real Gemini client
+	realClient := service.NewRealGeminiClient(genaiClient)
+	narrativeService := service.NewNarrativeService(realClient)
 	narrative.RegisterNarrativeServiceServer(s, narrativeService)
 
 	// Register reflection service on gRPC server.

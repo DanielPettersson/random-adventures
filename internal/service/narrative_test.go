@@ -5,53 +5,36 @@ import (
 	"testing"
 
 	narrative "random-adventures/proto"
-
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
-func TestGenerateNarrative_Unimplemented(t *testing.T) {
-	s := NewNarrativeService()
-	req := &narrative.GenerateNarrativeRequest{Prompt: "test"}
-	resp, err := s.GenerateNarrative(context.Background(), req)
-
-	if resp != nil {
-		t.Errorf("Expected nil response, got %v", resp)
-	}
-
-	if err == nil {
-		t.Fatal("Expected error, got nil")
-	}
-
-	st, ok := status.FromError(err)
-	if !ok {
-		t.Fatal("Expected gRPC status error")
-	}
-
-	if st.Code() != codes.Unimplemented {
-		t.Errorf("Expected Unimplemented code, got %v", st.Code())
-	}
+type mockGeminiClient struct {
+	generateContentFunc func(ctx context.Context, model string, prompt string) (string, error)
 }
 
-func TestGenerateImage_Unimplemented(t *testing.T) {
-	s := NewNarrativeService()
-	req := &narrative.GenerateImageRequest{Prompt: "test"}
-	resp, err := s.GenerateImage(context.Background(), req)
+func (m *mockGeminiClient) GenerateContent(ctx context.Context, model string, prompt string) (string, error) {
+	return m.generateContentFunc(ctx, model, prompt)
+}
 
-	if resp != nil {
-		t.Errorf("Expected nil response, got %v", resp)
+func TestGenerateNarrative_Success(t *testing.T) {
+	mockClient := &mockGeminiClient{
+		generateContentFunc: func(ctx context.Context, model string, prompt string) (string, error) {
+			return "AI generated story", nil
+		},
 	}
 
-	if err == nil {
-		t.Fatal("Expected error, got nil")
+	s := NewNarrativeService(mockClient)
+
+	req := &narrative.GenerateNarrativeRequest{
+		Prompt: "Start an adventure",
+		Tone:   "Dark",
+	}
+	resp, err := s.GenerateNarrative(context.Background(), req)
+
+	if err != nil {
+		t.Fatalf("Expected no error, got %v", err)
 	}
 
-	st, ok := status.FromError(err)
-	if !ok {
-		t.Fatal("Expected gRPC status error")
-	}
-
-	if st.Code() != codes.Unimplemented {
-		t.Errorf("Expected Unimplemented code, got %v", st.Code())
+	if resp.Text != "AI generated story" {
+		t.Errorf("Expected 'AI generated story', got %v", resp.Text)
 	}
 }
