@@ -29,15 +29,22 @@ func (s *NarrativeService) GenerateNarrative(
 	ctx context.Context,
 	req *connect.Request[narrative.GenerateNarrativeRequest],
 ) (*connect.Response[narrative.GenerateNarrativeResponse], error) {
-	prompt := fmt.Sprintf("Narrative Tone: %s. Prompt: %s", req.Msg.Tone, req.Msg.Prompt)
+	systemInstruction := fmt.Sprintf(`You are a master storyteller for a text-based adventure game.
+Your style is Direct & Impactful. Avoid excessive exposition; focus on immediate actions and sensory details.
+Your response must be concise, ideally between 600-700 characters.
+Tone: %s
+
+CRITICAL: Every response MUST end with a mandatory closing question that forces the player to make a choice to continue the story. The question can be open-ended or offer specific contextual choices.`, req.Msg.Tone)
+
+	prompt := fmt.Sprintf("User Input: %s", req.Msg.Prompt)
 	if len(req.Msg.History) > 0 {
-		prompt += "\nHistory:\n"
+		prompt += "\n\nRecent History for Context:\n"
 		for _, h := range req.Msg.History {
 			prompt += fmt.Sprintf("- %s\n", h)
 		}
 	}
 
-	text, err := s.genaiClient.GenerateContent(ctx, "gemini-3-flash-preview", "", prompt)
+	text, err := s.genaiClient.GenerateContent(ctx, "gemini-3-flash-preview", systemInstruction, prompt)
 	if err != nil {
 		return nil, connect.NewError(connect.CodeInternal, fmt.Errorf("failed to generate narrative: %v", err))
 	}
