@@ -73,7 +73,7 @@ func (s *NarrativeService) GenerateImage(
 	}
 
 	// Update the prompt with realism keywords as per spec
-	prompt = fmt.Sprintf("%s. Style: photorealistic, vibrant, cinematic, dramatic.", prompt)
+	prompt = fmt.Sprintf("%s. Style: photorealistic, stylized, vibrant, expressive, atmospheric.", prompt)
 
 	generatedImage, err := s.genaiClient.GenerateImage(ctx, "gemini-3.1-flash-image-preview", prompt, imageData)
 	if err != nil {

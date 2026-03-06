@@ -5,7 +5,7 @@ interface ToneSelectionProps {
 }
 
 const ToneSelection: React.FC<ToneSelectionProps> = ({ onSelect }) => {
-  const tones = ['Dark', 'Humorous', 'Epic']
+  const tones = ['Dark', 'Humorous', 'Epic', 'Children story']
 
   return (
     <div className="tone-selection">

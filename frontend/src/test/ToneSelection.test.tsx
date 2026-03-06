@@ -8,6 +8,7 @@ describe('ToneSelection', () => {
     expect(screen.getByText(/Dark/i)).toBeInTheDocument()
     expect(screen.getByText(/Humorous/i)).toBeInTheDocument()
     expect(screen.getByText(/Epic/i)).toBeInTheDocument()
+    expect(screen.getByText(/Children story/i)).toBeInTheDocument()
   })
 
   it('calls onSelect with correct tone when a button is clicked', () => {
