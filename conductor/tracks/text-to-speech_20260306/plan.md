@@ -18,14 +18,14 @@
 - [x] Task: Conductor - User Manual Verification 'Phase 2: Frontend Service Layer' (Protocol in workflow.md) (c9d7b39)
 
 ## Phase 3: Frontend Integration & State Management
-- [ ] Task: Update the `useAdventure` hook to store and update audio data for segments.
-    - [ ] Update the `AdventureSegment` type in `frontend/src/components/AdventureFeed.tsx` to include `audioData`.
-    - [ ] Add an `updateSegmentAudio` function to the `useAdventure` hook.
-- [ ] Task: Add a global `isAudioEnabled` state to the UI to toggle TTS.
-    - [ ] Store this state in a suitable location (e.g., `App.tsx` or a context provider).
-- [ ] Task: Write failing tests for the updated `useAdventure` hook and audio state.
-- [ ] Task: Verify the implementation passes all tests.
-- [ ] Task: Conductor - User Manual Verification 'Phase 3: Frontend Integration & State Management' (Protocol in workflow.md)
+- [x] Task: Update the `useAdventure` hook to store and update audio data for segments. (edd55f6)
+    - [x] Update the `AdventureSegment` type in `frontend/src/components/AdventureFeed.tsx` to include `audioData`. (edd55f6)
+    - [x] Add an `updateSegmentAudio` function to the `useAdventure` hook. (edd55f6)
+- [x] Task: Add a global `isAudioEnabled` state to the UI to toggle TTS. (edd55f6)
+    - [x] Store this state in a suitable location (e.g., `App.tsx` or a context provider). (edd55f6)
+- [x] Task: Write failing tests for the updated `useAdventure` hook and audio state. (edd55f6)
+- [x] Task: Verify the implementation passes all tests. (edd55f6)
+- [x] Task: Conductor - User Manual Verification 'Phase 3: Frontend Integration & State Management' (Protocol in workflow.md) (edd55f6)
 
 ## Phase 4: UI Components & Playback Logic
 - [ ] Task: Add a "Text-to-Speech" global toggle to the UI.
