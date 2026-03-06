@@ -1,0 +1,8 @@
+{
+  "track_id": "player-camera-integration_20260306",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-03-06T12:00:00Z",
+  "updated_at": "2026-03-06T12:00:00Z",
+  "description": "When starting a new adventure, if the device has a web camera. The player should be able to take a picture of him or herself. This picture should be used as input for each generated image in the story segments. The prompt for generating the image should contain that the person in the picture is the player in the adventure. Also the generated images should be more realistic in style"
+}

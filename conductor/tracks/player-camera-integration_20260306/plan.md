@@ -1,0 +1,38 @@
+# Implementation Plan - Player Camera Integration
+
+## Phase 1: Proto and Backend Updates
+
+### Task: Update Proto Definitions
+- [ ] Update `proto/narrative.proto` to include an optional field for the player's photo (Base64 string).
+- [ ] Generate Go and TypeScript code from the updated proto.
+- [ ] Task: Conductor - User Manual Verification 'Update Proto Definitions' (Protocol in workflow.md)
+
+### Task: Backend Narrative Service Update
+- [ ] **Red Phase:** Write failing tests in `internal/service/narrative_test.go` to verify that the photo is received and included in the image generation prompt.
+- [ ] **Green Phase:** Implement the logic in `internal/service/narrative.go` to parse the photo from the RPC request.
+- [ ] **Green Phase:** Update the image generation prompt to include the player photo and the realism keywords.
+- [ ] **Refactor:** Clean up the prompt construction logic.
+- [ ] Verify coverage (>80%) for new code.
+- [ ] Task: Conductor - User Manual Verification 'Backend Narrative Service Update' (Protocol in workflow.md)
+
+## Phase 2: Frontend Implementation
+
+### Task: Create Camera Component
+- [ ] **Red Phase:** Write failing tests in `frontend/src/test/CameraComponent.test.tsx` for a new `CameraComponent`.
+- [ ] **Green Phase:** Implement `CameraComponent` using the browser's MediaDevices API.
+- [ ] **Green Phase:** Add functionality to capture a photo and convert it to Base64.
+- [ ] Verify coverage (>80%) for new code.
+- [ ] Task: Conductor - User Manual Verification 'Create Camera Component' (Protocol in workflow.md)
+
+### Task: Integrate Camera into Main UI
+- [ ] **Red Phase:** Update `frontend/src/test/App.test.tsx` to verify the presence of the camera expandable card.
+- [ ] **Green Phase:** Implement the expandable card in `frontend/src/App.tsx` or a new component.
+- [ ] **Green Phase:** Connect the `CameraComponent` to the main application state.
+- [ ] **Green Phase:** Update `frontend/src/api/narrative.ts` to include the photo in the RPC request.
+- [ ] Verify coverage (>80%) for new code.
+- [ ] Task: Conductor - User Manual Verification 'Integrate Camera into Main UI' (Protocol in workflow.md)
+
+### Task: Final Polish and Realism Check
+- [ ] Verify the "realistic" style of generated images with the captured photo.
+- [ ] Ensure smooth transitions and error handling for camera access.
+- [ ] Task: Conductor - User Manual Verification 'Final Polish and Realism Check' (Protocol in workflow.md)
