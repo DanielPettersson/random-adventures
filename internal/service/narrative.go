@@ -80,6 +80,10 @@ func (r *realGeminiClient) GenerateContent(ctx context.Context, model string, pr
 func (r *realGeminiClient) GenerateImage(ctx context.Context, model string, prompt string) ([]byte, error) {
 	config := &genai.GenerateContentConfig{
 		ResponseModalities: []string{"IMAGE"},
+		ImageConfig: &genai.ImageConfig{
+			AspectRatio: "16:9",
+			ImageSize:   "0.5K",
+		},
 	}
 	resp, err := r.client.Models.GenerateContent(ctx, model, genai.Text(prompt), config)
 	if err != nil {

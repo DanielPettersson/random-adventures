@@ -16,15 +16,23 @@
 #root {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 1rem;
   text-align: center;
+  height: 100vh;
+  height: 100dvh;
+  box-sizing: border-box;
 }
 
 .app-container {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
-  min-height: 80vh;
+  gap: 1rem;
+  height: 100%;
+  justify-content: center;
+}
+
+.app-container.adventure-started {
+  justify-content: flex-start;
 }
 
 h1 {
@@ -37,6 +45,7 @@ h1 {
 
 .tone-selection {
   animation: fadeIn 1s ease-out;
+  margin-top: 2rem;
 }
 
 .tone-buttons {
@@ -71,15 +80,17 @@ h1 {
   gap: 2rem;
   max-width: 900px;
   margin: 0 auto;
-  padding: 2rem;
+  width: 100%;
+  padding: 1rem 2rem;
   border: 1px solid #333;
   border-radius: 12px;
   background: rgba(20, 20, 20, 0.8);
-  max-height: 65vh;
+  flex: 1;
   overflow-y: auto;
   box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.5);
   scrollbar-width: thin;
   scrollbar-color: #444 #1a1a1a;
+  box-sizing: border-box;
 }
 
 .adventure-segment {
@@ -133,14 +144,15 @@ h1 {
   margin: 0 auto;
   width: 100%;
   background: #1a1a1a;
-  padding: 1rem;
+  padding: 0.75rem 1rem;
   border-radius: 12px;
   border: 1px solid #333;
+  box-sizing: border-box;
 }
 
 .prompt-input input {
   flex: 1;
-  padding: 1rem;
+  padding: 0.75rem 1rem;
   border-radius: 8px;
   border: 1px solid #444;
   background: #0f0f0f;
@@ -149,7 +161,7 @@ h1 {
 }
 
 .prompt-input button {
-  padding: 0 2rem;
+  padding: 0 1.5rem;
   background: #d4af37;
   color: #0f0f0f;
   border: none;
@@ -172,15 +184,21 @@ h1 {
   margin: 0 auto;
   width: 100%;
   color: #888;
+  font-size: 0.9rem;
+}
+
+.game-controls p {
+  margin: 0;
 }
 
 .game-controls button {
   background: transparent;
   border: 1px solid #444;
   color: #888;
-  padding: 0.5rem 1rem;
+  padding: 0.25rem 0.75rem;
   border-radius: 4px;
   cursor: pointer;
+  font-size: 0.85rem;
 }
 
 @keyframes fadeIn {
@@ -219,6 +237,7 @@ h1 {
   background: #1a1a1a;
   border-radius: 8px;
   min-height: 250px;
+  min-width: 824px;
 }
 
 .skeleton-text {

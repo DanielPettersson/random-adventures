@@ -69,8 +69,8 @@ function App() {
   }
 
   return (
-    <div className="app-container">
-      <h1>Random Adventures</h1>
+    <div className={`app-container ${tone ? 'adventure-started' : ''}`}>
+      {!tone && <h1>Random Adventures</h1>}
       
       {!tone ? (
         <ToneSelection onSelect={handleToneSelect} />
