@@ -4,5 +4,5 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-- [~] **Track: Implement core web backend and narrative generation API**
+- [x] **Track: Implement core web backend and narrative generation API**
   *Link: [./tracks/backend_20260306/](./tracks/backend_20260306/)*
