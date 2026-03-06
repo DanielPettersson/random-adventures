@@ -128,6 +128,7 @@ func (x *GenerateNarrativeResponse) GetText() string {
 type GenerateImageRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Prompt        string                 `protobuf:"bytes,1,opt,name=prompt,proto3" json:"prompt,omitempty"`
+	PlayerPhoto   *string                `protobuf:"bytes,2,opt,name=player_photo,json=playerPhoto,proto3,oneof" json:"player_photo,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -165,6 +166,13 @@ func (*GenerateImageRequest) Descriptor() ([]byte, []int) {
 func (x *GenerateImageRequest) GetPrompt() string {
 	if x != nil {
 		return x.Prompt
+	}
+	return ""
+}
+
+func (x *GenerateImageRequest) GetPlayerPhoto() string {
+	if x != nil && x.PlayerPhoto != nil {
+		return *x.PlayerPhoto
 	}
 	return ""
 }
@@ -223,9 +231,11 @@ const file_proto_narrative_proto_rawDesc = "" +
 	"\x04tone\x18\x02 \x01(\tR\x04tone\x12\x18\n" +
 	"\ahistory\x18\x03 \x03(\tR\ahistory\"/\n" +
 	"\x19GenerateNarrativeResponse\x12\x12\n" +
-	"\x04text\x18\x01 \x01(\tR\x04text\".\n" +
+	"\x04text\x18\x01 \x01(\tR\x04text\"g\n" +
 	"\x14GenerateImageRequest\x12\x16\n" +
-	"\x06prompt\x18\x01 \x01(\tR\x06prompt\"6\n" +
+	"\x06prompt\x18\x01 \x01(\tR\x06prompt\x12&\n" +
+	"\fplayer_photo\x18\x02 \x01(\tH\x00R\vplayerPhoto\x88\x01\x01B\x0f\n" +
+	"\r_player_photo\"6\n" +
 	"\x15GenerateImageResponse\x12\x1d\n" +
 	"\n" +
 	"image_data\x18\x01 \x01(\fR\timageData2\xc6\x01\n" +
@@ -269,6 +279,7 @@ func file_proto_narrative_proto_init() {
 	if File_proto_narrative_proto != nil {
 		return
 	}
+	file_proto_narrative_proto_msgTypes[2].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

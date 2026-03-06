@@ -21,6 +21,7 @@ message GenerateNarrativeResponse {
 
 message GenerateImageRequest {
   string prompt = 1;
+  optional string player_photo = 2;
 }
 
 message GenerateImageResponse {
