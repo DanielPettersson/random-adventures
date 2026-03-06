@@ -25,6 +25,11 @@ export class GenerateNarrativeRequest extends Message<GenerateNarrativeRequest> 
    */
   history: string[] = [];
 
+  /**
+   * @generated from field: string language = 4;
+   */
+  language = "";
+
   constructor(data?: PartialMessage<GenerateNarrativeRequest>) {
     super();
     proto3.util.initPartial(data, this);
@@ -36,6 +41,7 @@ export class GenerateNarrativeRequest extends Message<GenerateNarrativeRequest> 
     { no: 1, name: "prompt", kind: "scalar", T: 9 /* ScalarType.STRING */ },
     { no: 2, name: "tone", kind: "scalar", T: 9 /* ScalarType.STRING */ },
     { no: 3, name: "history", kind: "scalar", T: 9 /* ScalarType.STRING */, repeated: true },
+    { no: 4, name: "language", kind: "scalar", T: 9 /* ScalarType.STRING */ },
   ]);
 
   static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GenerateNarrativeRequest {

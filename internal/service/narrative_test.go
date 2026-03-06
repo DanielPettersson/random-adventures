@@ -204,9 +204,10 @@ func TestGenerateImage_WithPlayerPhoto(t *testing.T) {
 	expectedParts := []string{
 		"The person in the attached photo is the protagonist",
 		"photorealistic",
+		"stylized",
 		"vibrant",
-		"cinematic",
-		"dramatic",
+		"expressive",
+		"atmospheric",
 	}
 
 	for _, part := range expectedParts {
@@ -243,7 +244,7 @@ func TestGenerateImage_DecodingError(t *testing.T) {
 		t.Errorf("Image prompt should NOT contain photo reference if decoding failed: %q", capturedPrompt)
 	}
 
-	if !contains(capturedPrompt, "photorealistic") {
+	if !contains(capturedPrompt, "stylized") {
 		t.Errorf("Image prompt missing realism keywords: %q", capturedPrompt)
 	}
 }

@@ -8,11 +8,12 @@ const transport = createConnectTransport({
 
 export const client = createPromiseClient(NarrativeService, transport);
 
-export const generateNarrative = async (prompt: string, tone: string, history: string[]) => {
+export const generateNarrative = async (prompt: string, tone: string, history: string[], language: string) => {
   return await client.generateNarrative({
     prompt,
     tone,
     history,
+    language,
   });
 };
 

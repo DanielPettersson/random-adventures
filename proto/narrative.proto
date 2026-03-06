@@ -13,6 +13,7 @@ message GenerateNarrativeRequest {
   string prompt = 1;
   string tone = 2;
   repeated string history = 3;
+  string language = 4;
 }
 
 message GenerateNarrativeResponse {

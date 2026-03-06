@@ -1,10 +1,11 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useMemo } from 'react'
 import './App.css'
 import ToneSelection from './components/ToneSelection'
 import AdventureFeed from './components/AdventureFeed'
 import type { AdventureSegment } from './components/AdventureFeed'
 import PromptInput from './components/PromptInput'
 import CameraComponent from './components/CameraComponent'
+import LanguageSelection from './components/LanguageSelection'
 import { generateNarrative, generateImage } from './api/narrative'
 
 function App() {
@@ -14,12 +15,25 @@ function App() {
   const [playerPhoto, setPlayerPhoto] = useState<string | undefined>(undefined)
   const [isCameraOpen, setIsCameraOpen] = useState(false)
 
+  const defaultLanguage = useMemo(() => {
+    const lang = navigator.language.split('-')[0]
+    switch (lang) {
+      case 'sv': return 'Swedish'
+      case 'es': return 'Spanish'
+      case 'fr': return 'French'
+      case 'de': return 'German'
+      default: return 'English'
+    }
+  }, [])
+
+  const [language, setLanguage] = useState<string>(defaultLanguage)
+
   const handleToneSelect = useCallback(async (selectedTone: string) => {
     setTone(selectedTone)
     setIsLoading(true)
     
     try {
-      const response = await generateNarrative("Start a new adventure", selectedTone, [])
+      const response = await generateNarrative("Start a new adventure", selectedTone, [], language)
       const initialSegment: AdventureSegment = {
         id: Date.now().toString(),
         text: response.text
@@ -37,7 +51,7 @@ function App() {
       console.error("Failed to start adventure:", error)
       setIsLoading(false)
     }
-  }, [playerPhoto])
+  }, [playerPhoto, language])
 
   const handlePromptSubmit = useCallback(async (prompt: string) => {
     if (!tone) return
@@ -46,7 +60,7 @@ function App() {
     const history = segments.map(s => s.text)
     
     try {
-      const response = await generateNarrative(prompt, tone, history)
+      const response = await generateNarrative(prompt, tone, history, language)
       const newSegment: AdventureSegment = {
         id: Date.now().toString(),
         text: response.text,
@@ -65,7 +79,7 @@ function App() {
       console.error("Failed to continue adventure:", error)
       setIsLoading(false)
     }
-  }, [tone, segments, playerPhoto])
+  }, [tone, segments, playerPhoto, language])
 
   const handleReset = () => {
     setTone(null)
@@ -85,6 +99,7 @@ function App() {
 
       {!tone && (
         <div className="start-screen-controls" style={{ marginBottom: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <LanguageSelection selectedLanguage={language} onLanguageChange={setLanguage} />
           <button onClick={() => setIsCameraOpen(!isCameraOpen)}>
             {playerPhoto ? 'Change Photo' : 'Add Photo'}
           </button>
@@ -107,7 +122,7 @@ function App() {
         <>
           <div className="game-controls">
             <button onClick={handleReset}>Reset Adventure</button>
-            <p>Tone: <strong>{tone}</strong></p>
+            <p>Tone: <strong>{tone}</strong> | Language: <strong>{language}</strong></p>
             {playerPhoto && (
               <img src={playerPhoto} alt="Player" style={{ width: '40px', height: '40px', borderRadius: '50%', marginLeft: '10px', objectFit: 'cover' }} />
             )}

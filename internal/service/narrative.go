@@ -30,12 +30,19 @@ func (s *NarrativeService) GenerateNarrative(
 	ctx context.Context,
 	req *connect.Request[narrative.GenerateNarrativeRequest],
 ) (*connect.Response[narrative.GenerateNarrativeResponse], error) {
+	language := req.Msg.Language
+	if language == "" {
+		language = "English"
+	}
+
 	systemInstruction := fmt.Sprintf(`You are a master storyteller for a text-based adventure game.
 Your style is Direct & Impactful. Avoid excessive exposition; focus on immediate actions and sensory details.
 Your response must be concise, ideally between 600-700 characters.
 Tone: %s
+Language: %s
 
-CRITICAL: Every response MUST end with a mandatory closing question that forces the player to make a choice to continue the story. The question can be open-ended or offer specific contextual choices.`, req.Msg.Tone)
+CRITICAL: You MUST write the entire story and all questions in %s.
+CRITICAL: Every response MUST end with a mandatory closing question that forces the player to make a choice to continue the story. The question can be open-ended or offer specific contextual choices.`, req.Msg.Tone, language, language)
 
 	prompt := fmt.Sprintf("User Input: %s", req.Msg.Prompt)
 	if len(req.Msg.History) > 0 {

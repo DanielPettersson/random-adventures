@@ -26,6 +26,7 @@ type GenerateNarrativeRequest struct {
 	Prompt        string                 `protobuf:"bytes,1,opt,name=prompt,proto3" json:"prompt,omitempty"`
 	Tone          string                 `protobuf:"bytes,2,opt,name=tone,proto3" json:"tone,omitempty"`
 	History       []string               `protobuf:"bytes,3,rep,name=history,proto3" json:"history,omitempty"`
+	Language      string                 `protobuf:"bytes,4,opt,name=language,proto3" json:"language,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -79,6 +80,13 @@ func (x *GenerateNarrativeRequest) GetHistory() []string {
 		return x.History
 	}
 	return nil
+}
+
+func (x *GenerateNarrativeRequest) GetLanguage() string {
+	if x != nil {
+		return x.Language
+	}
+	return ""
 }
 
 type GenerateNarrativeResponse struct {
@@ -225,11 +233,12 @@ var File_proto_narrative_proto protoreflect.FileDescriptor
 
 const file_proto_narrative_proto_rawDesc = "" +
 	"\n" +
-	"\x15proto/narrative.proto\x12\tnarrative\"`\n" +
+	"\x15proto/narrative.proto\x12\tnarrative\"|\n" +
 	"\x18GenerateNarrativeRequest\x12\x16\n" +
 	"\x06prompt\x18\x01 \x01(\tR\x06prompt\x12\x12\n" +
 	"\x04tone\x18\x02 \x01(\tR\x04tone\x12\x18\n" +
-	"\ahistory\x18\x03 \x03(\tR\ahistory\"/\n" +
+	"\ahistory\x18\x03 \x03(\tR\ahistory\x12\x1a\n" +
+	"\blanguage\x18\x04 \x01(\tR\blanguage\"/\n" +
 	"\x19GenerateNarrativeResponse\x12\x12\n" +
 	"\x04text\x18\x01 \x01(\tR\x04text\"g\n" +
 	"\x14GenerateImageRequest\x12\x16\n" +

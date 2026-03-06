@@ -16,6 +16,7 @@ describe('App Component', () => {
 
   beforeEach(() => {
     vi.stubGlobal('navigator', {
+      language: 'en-US',
       mediaDevices: {
         getUserMedia: vi.fn().mockResolvedValue(mockStream),
       },
