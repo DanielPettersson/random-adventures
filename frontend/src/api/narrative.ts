@@ -16,9 +16,15 @@ export const generateNarrative = async (prompt: string, tone: string, history: s
   });
 };
 
-export const generateImage = async (prompt: string) => {
+export const generateImage = async (prompt: string, playerPhoto?: string) => {
+  // Strip the "data:image/png;base64," prefix if it's there
+  const photo = playerPhoto?.startsWith("data:image") 
+    ? playerPhoto.split(",")[1] 
+    : playerPhoto;
+
   const response = await client.generateImage({
     prompt,
+    playerPhoto: photo,
   });
   // Convert bytes to base64
   const base64 = btoa(
