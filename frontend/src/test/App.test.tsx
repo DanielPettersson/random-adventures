@@ -112,20 +112,20 @@ describe('App Component', () => {
     })
   })
 
-  it('renders the TTS toggle and triggers audio when enabled', async () => {
+  it('renders the sound toggle and triggers audio when enabled', async () => {
     const generateAudioSpy = vi.mocked(generateAudio)
     const playAudioSpy = vi.mocked(playAudio)
     vi.mocked(generateNarrative).mockResolvedValue({ text: 'Starting adventure...' })
     
     render(<App />)
     
-    // Find TTS toggle
-    const ttsToggle = screen.getByLabelText(/Text-to-Speech/i)
-    expect(ttsToggle).toBeInTheDocument()
+    // Find sound toggle
+    const soundToggle = screen.getByLabelText(/Sound/i)
+    expect(soundToggle).toBeInTheDocument()
     
-    // Enable TTS
-    fireEvent.click(ttsToggle)
-    expect(ttsToggle).toBeChecked()
+    // Enable sound
+    fireEvent.click(soundToggle)
+    expect(soundToggle).toBeChecked()
     
     // Start adventure
     fireEvent.click(screen.getByRole('button', { name: /Dark/i }))

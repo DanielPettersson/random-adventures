@@ -129,7 +129,7 @@ function App() {
               onChange={(e) => setIsAudioEnabled(e.target.checked)}
               style={{ marginRight: '8px' }}
             />
-            Text-to-Speech
+            Sound
           </label>
           {playerPhoto && !isCameraOpen && (
             <div style={{ marginTop: '10px' }}>
@@ -151,13 +151,13 @@ function App() {
           <div className="game-controls">
             <button onClick={handleReset}>Reset Adventure</button>
             <label style={{ marginLeft: '15px', display: 'inline-flex', alignItems: 'center', cursor: 'pointer' }}>
-              <input 
-                type="checkbox" 
-                checked={isAudioEnabled} 
+              <input
+                type="checkbox"
+                checked={isAudioEnabled}
                 onChange={(e) => setIsAudioEnabled(e.target.checked)}
                 style={{ marginRight: '5px' }}
               />
-              TTS
+              Sound
             </label>
             <p>Tone: <strong>{tone}</strong> | Language: <strong>{language}</strong></p>
             {playerPhoto && (
