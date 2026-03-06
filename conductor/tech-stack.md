@@ -4,6 +4,8 @@
 - **Language:** Go (v1.26) for a high-performance and scalable backend.
 - **Backend Communication:** gRPC and Protocol Buffers (`google.golang.org/grpc`, `google.golang.org/protobuf`) for structured and efficient communication.
 - **AI Integration:** Google GenAI for Go (`google.golang.org/genai`) to power the game's narrative and image generation.
+  - **Narrative Model:** `gemini-3.0-flash-preview`
+  - **Image Model:** `gemini-3.1-flash-image-preview`
 
 ## Web Frontend (Planned)
 - **Framework:** React with TypeScript for a modern, component-based, and type-safe user interface.
