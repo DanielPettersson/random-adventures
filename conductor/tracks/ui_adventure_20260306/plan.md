@@ -1,16 +1,16 @@
 # Implementation Plan: Create the UI for the Adventure Game
 
 ## Phase 1: Foundation & Core UI Components
-- [x] Task: Project Scaffolding
+- [x] Task: Project Scaffolding [3371c1f]
     - [x] Initialize React project with TypeScript
     - [x] Install necessary dependencies (e.g., gRPC client, state management)
-- [x] Task: Tone Selection Component
+- [x] Task: Tone Selection Component [3371c1f]
     - [x] Write unit tests for the `ToneSelection` component
     - [x] Implement the UI to select a narrative tone
-- [x] Task: Adventure Feed Component
+- [x] Task: Adventure Feed Component [3371c1f]
     - [x] Write unit tests for the `AdventureFeed` component
     - [x] Implement a scrollable area for narrative segments and images
-- [x] Task: Prompt Input Component
+- [x] Task: Prompt Input Component [3371c1f]
     - [x] Write unit tests for the `PromptInput` component
     - [x] Implement a text field and submit button
 - [~] Task: Conductor - User Manual Verification 'Foundation & Core UI Components' (Protocol in workflow.md)
