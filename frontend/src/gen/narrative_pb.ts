@@ -150,6 +150,11 @@ export class GenerateAudioResponse extends Message<GenerateAudioResponse> {
    */
   audioData = new Uint8Array(0);
 
+  /**
+   * @generated from field: string mime_type = 2;
+   */
+  mimeType = "";
+
   constructor(data?: PartialMessage<GenerateAudioResponse>) {
     super();
     proto3.util.initPartial(data, this);
@@ -159,6 +164,7 @@ export class GenerateAudioResponse extends Message<GenerateAudioResponse> {
   static readonly typeName = "narrative.GenerateAudioResponse";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
     { no: 1, name: "audio_data", kind: "scalar", T: 12 /* ScalarType.BYTES */ },
+    { no: 2, name: "mime_type", kind: "scalar", T: 9 /* ScalarType.STRING */ },
   ]);
 
   static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GenerateAudioResponse {

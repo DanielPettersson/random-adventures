@@ -28,6 +28,7 @@ message GenerateAudioRequest {
 
 message GenerateAudioResponse {
   bytes audio_data = 1;
+  string mime_type = 2;
 }
 
 message GenerateImageRequest {

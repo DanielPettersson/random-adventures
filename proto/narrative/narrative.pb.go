@@ -188,6 +188,7 @@ func (x *GenerateAudioRequest) GetLanguage() string {
 type GenerateAudioResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	AudioData     []byte                 `protobuf:"bytes,1,opt,name=audio_data,json=audioData,proto3" json:"audio_data,omitempty"`
+	MimeType      string                 `protobuf:"bytes,2,opt,name=mime_type,json=mimeType,proto3" json:"mime_type,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -227,6 +228,13 @@ func (x *GenerateAudioResponse) GetAudioData() []byte {
 		return x.AudioData
 	}
 	return nil
+}
+
+func (x *GenerateAudioResponse) GetMimeType() string {
+	if x != nil {
+		return x.MimeType
+	}
+	return ""
 }
 
 type GenerateImageRequest struct {
@@ -339,10 +347,11 @@ const file_proto_narrative_proto_rawDesc = "" +
 	"\x04text\x18\x01 \x01(\tR\x04text\"F\n" +
 	"\x14GenerateAudioRequest\x12\x12\n" +
 	"\x04text\x18\x01 \x01(\tR\x04text\x12\x1a\n" +
-	"\blanguage\x18\x02 \x01(\tR\blanguage\"6\n" +
+	"\blanguage\x18\x02 \x01(\tR\blanguage\"S\n" +
 	"\x15GenerateAudioResponse\x12\x1d\n" +
 	"\n" +
-	"audio_data\x18\x01 \x01(\fR\taudioData\"g\n" +
+	"audio_data\x18\x01 \x01(\fR\taudioData\x12\x1b\n" +
+	"\tmime_type\x18\x02 \x01(\tR\bmimeType\"g\n" +
 	"\x14GenerateImageRequest\x12\x16\n" +
 	"\x06prompt\x18\x01 \x01(\tR\x06prompt\x12&\n" +
 	"\fplayer_photo\x18\x02 \x01(\tH\x00R\vplayerPhoto\x88\x01\x01B\x0f\n" +

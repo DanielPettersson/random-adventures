@@ -14,7 +14,7 @@ import (
 type GeminiClient interface {
 	GenerateContent(ctx context.Context, model string, systemInstruction string, prompt string) (string, error)
 	GenerateImage(ctx context.Context, model string, prompt string, imageData []byte) ([]byte, error)
-	GenerateAudio(ctx context.Context, model string, text string) ([]byte, error)
+	GenerateAudio(ctx context.Context, model string, text string) ([]byte, string, error)
 }
 
 type NarrativeService struct {
@@ -95,12 +95,12 @@ func (s *NarrativeService) GenerateAudio(
 	ctx context.Context,
 	req *connect.Request[narrative.GenerateAudioRequest],
 ) (*connect.Response[narrative.GenerateAudioResponse], error) {
-	audioData, err := s.genaiClient.GenerateAudio(ctx, "gemini-2.5-flash-preview-tts", req.Msg.Text)
+	audioData, mimeType, err := s.genaiClient.GenerateAudio(ctx, "gemini-2.5-flash-preview-tts", req.Msg.Text)
 	if err != nil {
 		return nil, connect.NewError(connect.CodeInternal, fmt.Errorf("failed to generate audio: %v", err))
 	}
 
-	return connect.NewResponse(&narrative.GenerateAudioResponse{AudioData: audioData}), nil
+	return connect.NewResponse(&narrative.GenerateAudioResponse{AudioData: audioData, MimeType: mimeType}), nil
 }
 
 // realGeminiClient implements GeminiClient using the actual GenAI client
@@ -183,27 +183,30 @@ func (r *realGeminiClient) GenerateImage(ctx context.Context, model string, prom
 	return nil, fmt.Errorf("no image found in response")
 }
 
-func (r *realGeminiClient) GenerateAudio(ctx context.Context, model string, text string) ([]byte, error) {
+func (r *realGeminiClient) GenerateAudio(ctx context.Context, model string, text string) ([]byte, string, error) {
 	config := &genai.GenerateContentConfig{
 		ResponseModalities: []string{"AUDIO"},
 	}
 
 	resp, err := r.client.Models.GenerateContent(ctx, model, genai.Text(text), config)
 	if err != nil {
-		return nil, err
+		return nil, "", err
 	}
 	if len(resp.Candidates) == 0 {
-		return nil, fmt.Errorf("no candidates returned")
+		return nil, "", fmt.Errorf("no candidates returned")
 	}
 
 	candidate := resp.Candidates[0]
 	for _, part := range candidate.Content.Parts {
-		if part.InlineData != nil && part.InlineData.MIMEType == "audio/mpeg" {
-			return part.InlineData.Data, nil
+		if part.InlineData != nil && (part.InlineData.MIMEType == "audio/mpeg" || 
+			part.InlineData.MIMEType == "audio/mp3" || 
+			part.InlineData.MIMEType == "audio/L16;codec=pcm;rate=24000" ||
+			part.InlineData.MIMEType == "audio/L16") {
+			return part.InlineData.Data, part.InlineData.MIMEType, nil
 		}
 	}
 
-	return nil, fmt.Errorf("no audio found in response")
+	return nil, "", fmt.Errorf("no audio found in response")
 }
 
 // Verify that NarrativeService implements the handler interface

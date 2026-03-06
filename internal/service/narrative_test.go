@@ -13,7 +13,7 @@ import (
 type mockGeminiClient struct {
 	generateContentFunc func(ctx context.Context, model string, systemInstruction string, prompt string) (string, error)
 	generateImageFunc   func(ctx context.Context, model string, prompt string, imageData []byte) ([]byte, error)
-	generateAudioFunc   func(ctx context.Context, model string, text string) ([]byte, error)
+	generateAudioFunc   func(ctx context.Context, model string, text string) ([]byte, string, error)
 }
 
 func (m *mockGeminiClient) GenerateContent(ctx context.Context, model string, systemInstruction string, prompt string) (string, error) {
@@ -24,7 +24,7 @@ func (m *mockGeminiClient) GenerateImage(ctx context.Context, model string, prom
 	return m.generateImageFunc(ctx, model, prompt, imageData)
 }
 
-func (m *mockGeminiClient) GenerateAudio(ctx context.Context, model string, text string) ([]byte, error) {
+func (m *mockGeminiClient) GenerateAudio(ctx context.Context, model string, text string) ([]byte, string, error) {
 	return m.generateAudioFunc(ctx, model, text)
 }
 
@@ -264,8 +264,8 @@ func TestGenerateImage_DecodingError(t *testing.T) {
 
 func TestGenerateAudio_Success(t *testing.T) {
 	mockClient := &mockGeminiClient{
-		generateAudioFunc: func(ctx context.Context, model string, text string) ([]byte, error) {
-			return []byte("fake-audio-data"), nil
+		generateAudioFunc: func(ctx context.Context, model string, text string) ([]byte, string, error) {
+			return []byte("fake-audio-data"), "audio/mpeg", nil
 		},
 	}
 
@@ -284,12 +284,16 @@ func TestGenerateAudio_Success(t *testing.T) {
 	if string(resp.Msg.AudioData) != "fake-audio-data" {
 		t.Errorf("Expected 'fake-audio-data', got %v", string(resp.Msg.AudioData))
 	}
+
+	if resp.Msg.MimeType != "audio/mpeg" {
+		t.Errorf("Expected 'audio/mpeg', got %v", resp.Msg.MimeType)
+	}
 }
 
 func TestGenerateAudio_Error(t *testing.T) {
 	mockClient := &mockGeminiClient{
-		generateAudioFunc: func(ctx context.Context, model string, text string) ([]byte, error) {
-			return nil, fmt.Errorf("API error")
+		generateAudioFunc: func(ctx context.Context, model string, text string) ([]byte, string, error) {
+			return nil, "", fmt.Errorf("API error")
 		},
 	}
 

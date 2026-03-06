@@ -23,8 +23,8 @@ func (m *testMockGeminiClient) GenerateImage(ctx context.Context, model string, 
 	return []byte("fake-image-data"), nil
 }
 
-func (m *testMockGeminiClient) GenerateAudio(ctx context.Context, model string, text string) ([]byte, error) {
-	return []byte("fake-audio-data"), nil
+func (m *testMockGeminiClient) GenerateAudio(ctx context.Context, model string, text string) ([]byte, string, error) {
+	return []byte("fake-audio-data"), "audio/mpeg", nil
 }
 
 func TestNarrativeService_GenerateNarrative(t *testing.T) {
