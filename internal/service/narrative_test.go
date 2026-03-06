@@ -12,15 +12,15 @@ import (
 
 type mockGeminiClient struct {
 	generateContentFunc func(ctx context.Context, model string, systemInstruction string, prompt string) (string, error)
-	generateImageFunc   func(ctx context.Context, model string, prompt string) ([]byte, error)
+	generateImageFunc   func(ctx context.Context, model string, prompt string, imageData []byte) ([]byte, error)
 }
 
 func (m *mockGeminiClient) GenerateContent(ctx context.Context, model string, systemInstruction string, prompt string) (string, error) {
 	return m.generateContentFunc(ctx, model, systemInstruction, prompt)
 }
 
-func (m *mockGeminiClient) GenerateImage(ctx context.Context, model string, prompt string) ([]byte, error) {
-	return m.generateImageFunc(ctx, model, prompt)
+func (m *mockGeminiClient) GenerateImage(ctx context.Context, model string, prompt string, imageData []byte) ([]byte, error) {
+	return m.generateImageFunc(ctx, model, prompt, imageData)
 }
 
 func TestGenerateNarrative_Success(t *testing.T) {
@@ -112,7 +112,7 @@ func TestGenerateNarrative_Error(t *testing.T) {
 
 func TestGenerateImage_Error(t *testing.T) {
 	mockClient := &mockGeminiClient{
-		generateImageFunc: func(ctx context.Context, model string, prompt string) ([]byte, error) {
+		generateImageFunc: func(ctx context.Context, model string, prompt string, imageData []byte) ([]byte, error) {
 			return nil, fmt.Errorf("API error")
 		},
 	}
@@ -157,7 +157,7 @@ func TestGenerateNarrative_History(t *testing.T) {
 
 func TestGenerateImage_Success(t *testing.T) {
 	mockClient := &mockGeminiClient{
-		generateImageFunc: func(ctx context.Context, model string, prompt string) ([]byte, error) {
+		generateImageFunc: func(ctx context.Context, model string, prompt string, imageData []byte) ([]byte, error) {
 			return []byte("fake-image-data"), nil
 		},
 	}
@@ -175,5 +175,75 @@ func TestGenerateImage_Success(t *testing.T) {
 
 	if string(resp.Msg.ImageData) != "fake-image-data" {
 		t.Errorf("Expected 'fake-image-data', got %v", string(resp.Msg.ImageData))
+	}
+}
+
+func TestGenerateImage_WithPlayerPhoto(t *testing.T) {
+	var capturedPrompt string
+	mockClient := &mockGeminiClient{
+		generateImageFunc: func(ctx context.Context, model string, prompt string, imageData []byte) ([]byte, error) {
+			capturedPrompt = prompt
+			return []byte("fake-image-data"), nil
+		},
+	}
+
+	s := NewNarrativeService(mockClient)
+
+	photo := "YmFzZTY0LWVuY29kZWQtcGhvdG8=" // "base64-encoded-photo" in valid base64
+	req := connect.NewRequest(&narrative.GenerateImageRequest{
+		Prompt:      "A hero in a forest",
+		PlayerPhoto: &photo,
+	})
+	_, err := s.GenerateImage(context.Background(), req)
+
+	if err != nil {
+		t.Fatalf("Expected no error, got %v", err)
+	}
+
+	// Verify the prompt contains the player photo reference and realism keywords
+	expectedParts := []string{
+		"The person in the attached photo is the protagonist",
+		"photorealistic",
+		"vibrant",
+		"cinematic",
+		"dramatic",
+	}
+
+	for _, part := range expectedParts {
+		if !contains(capturedPrompt, part) {
+			t.Errorf("Image prompt missing expected part %q: %q", part, capturedPrompt)
+		}
+	}
+}
+
+func TestGenerateImage_DecodingError(t *testing.T) {
+	var capturedPrompt string
+	mockClient := &mockGeminiClient{
+		generateImageFunc: func(ctx context.Context, model string, prompt string, imageData []byte) ([]byte, error) {
+			capturedPrompt = prompt
+			return []byte("fake-image-data"), nil
+		},
+	}
+
+	s := NewNarrativeService(mockClient)
+
+	photo := "invalid-base64-!!!"
+	req := connect.NewRequest(&narrative.GenerateImageRequest{
+		Prompt:      "A hero in a forest",
+		PlayerPhoto: &photo,
+	})
+	_, err := s.GenerateImage(context.Background(), req)
+
+	if err != nil {
+		t.Fatalf("Expected no error, got %v", err)
+	}
+
+	// Verify the prompt doesn't contain the photo reference but has realism keywords
+	if contains(capturedPrompt, "The person in the attached photo is the protagonist") {
+		t.Errorf("Image prompt should NOT contain photo reference if decoding failed: %q", capturedPrompt)
+	}
+
+	if !contains(capturedPrompt, "photorealistic") {
+		t.Errorf("Image prompt missing realism keywords: %q", capturedPrompt)
 	}
 }

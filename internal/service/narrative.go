@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"encoding/base64"
 	"fmt"
 	"random-adventures/proto/narrative"
 	"random-adventures/proto/narrative/narrativeconnect"
@@ -12,7 +13,7 @@ import (
 
 type GeminiClient interface {
 	GenerateContent(ctx context.Context, model string, systemInstruction string, prompt string) (string, error)
-	GenerateImage(ctx context.Context, model string, prompt string) ([]byte, error)
+	GenerateImage(ctx context.Context, model string, prompt string, imageData []byte) ([]byte, error)
 }
 
 type NarrativeService struct {
@@ -56,15 +57,30 @@ func (s *NarrativeService) GenerateImage(
 	ctx context.Context,
 	req *connect.Request[narrative.GenerateImageRequest],
 ) (*connect.Response[narrative.GenerateImageResponse], error) {
-	// Stylized illustration support
-	prompt := fmt.Sprintf("A vibrant, stylized illustration of: %s. Art style: digital painting, expressive, atmospheric.", req.Msg.Prompt)
+	prompt := req.Msg.Prompt
+	var imageData []byte
+	var err error
 
-	imageData, err := s.genaiClient.GenerateImage(ctx, "gemini-3.1-flash-image-preview", prompt)
+	if req.Msg.PlayerPhoto != nil && *req.Msg.PlayerPhoto != "" {
+		// Decode the base64 photo
+		imageData, err = base64.StdEncoding.DecodeString(*req.Msg.PlayerPhoto)
+		if err != nil {
+			// Fallback to text only if decoding fails
+			fmt.Printf("Warning: failed to decode player photo: %v\n", err)
+		} else {
+			prompt = fmt.Sprintf("The person in the attached photo is the protagonist. %s", prompt)
+		}
+	}
+
+	// Update the prompt with realism keywords as per spec
+	prompt = fmt.Sprintf("%s. Style: photorealistic, vibrant, cinematic, dramatic.", prompt)
+
+	generatedImage, err := s.genaiClient.GenerateImage(ctx, "gemini-3.1-flash-image-preview", prompt, imageData)
 	if err != nil {
 		return nil, connect.NewError(connect.CodeInternal, fmt.Errorf("failed to generate image: %v", err))
 	}
 
-	return connect.NewResponse(&narrative.GenerateImageResponse{ImageData: imageData}), nil
+	return connect.NewResponse(&narrative.GenerateImageResponse{ImageData: generatedImage}), nil
 }
 
 // realGeminiClient implements GeminiClient using the actual GenAI client
@@ -94,7 +110,7 @@ func (r *realGeminiClient) GenerateContent(ctx context.Context, model string, sy
 	return result.Text(), nil
 }
 
-func (r *realGeminiClient) GenerateImage(ctx context.Context, model string, prompt string) ([]byte, error) {
+func (r *realGeminiClient) GenerateImage(ctx context.Context, model string, prompt string, imageData []byte) ([]byte, error) {
 	config := &genai.GenerateContentConfig{
 		ResponseModalities: []string{"IMAGE"},
 		ImageConfig: &genai.ImageConfig{
@@ -102,7 +118,19 @@ func (r *realGeminiClient) GenerateImage(ctx context.Context, model string, prom
 			ImageSize:   "0.5K",
 		},
 	}
-	resp, err := r.client.Models.GenerateContent(ctx, model, genai.Text(prompt), config)
+
+	// The SDK's GenerateContent expects []*genai.Content
+	contents := genai.Text(prompt)
+	if len(imageData) > 0 {
+		contents[0].Parts = append(contents[0].Parts, &genai.Part{
+			InlineData: &genai.Blob{
+				MIMEType: "image/jpeg",
+				Data:     imageData,
+			},
+		})
+	}
+
+	resp, err := r.client.Models.GenerateContent(ctx, model, contents, config)
 	if err != nil {
 		return nil, err
 	}

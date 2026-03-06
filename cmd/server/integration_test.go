@@ -19,7 +19,7 @@ func (m *testMockGeminiClient) GenerateContent(ctx context.Context, model string
 	return "AI generated adventure", nil
 }
 
-func (m *testMockGeminiClient) GenerateImage(ctx context.Context, model string, prompt string) ([]byte, error) {
+func (m *testMockGeminiClient) GenerateImage(ctx context.Context, model string, prompt string, imageData []byte) ([]byte, error) {
 	return []byte("fake-image-data"), nil
 }
 
