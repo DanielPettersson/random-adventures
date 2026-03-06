@@ -1,13 +1,13 @@
 # Implementation Plan: Flashy Loading Progress UI
 
 ## Phase 1: Skeleton & Loading Components
-- [ ] Task: Create `LoadingSkeleton` Component
-    - [ ] Write unit tests for the skeleton structure and pulse animation
-    - [ ] Implement the component with CSS for pulsing blocks
-- [ ] Task: Create `LoadingMessage` Component
-    - [ ] Write unit tests for message cycling logic
-    - [ ] Implement the component with atmospheric message transitions
-- [ ] Task: Conductor - User Manual Verification 'Skeleton & Loading Components' (Protocol in workflow.md)
+- [x] Task: Create `LoadingSkeleton` Component
+    - [x] Write unit tests for the skeleton structure and pulse animation
+    - [x] Implement the component with CSS for pulsing blocks
+- [x] Task: Create `LoadingMessage` Component
+    - [x] Write unit tests for message cycling logic
+    - [x] Implement the component with atmospheric message transitions
+- [~] Task: Conductor - User Manual Verification 'Skeleton & Loading Components' (Protocol in workflow.md)
 
 ## Phase 2: Integration & Visual Effects
 - [ ] Task: Integrate Skeleton into `AdventureFeed`

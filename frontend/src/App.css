@@ -190,3 +190,69 @@ h1 {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+/* Loading Skeleton & Pulse Animation */
+.skeleton-image {
+  width: 100%;
+  aspect-ratio: 16/9;
+  background: #222;
+  border-radius: 8px;
+}
+
+.skeleton-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.skeleton-line {
+  height: 1.25rem;
+  background: #222;
+  border-radius: 4px;
+  width: 100%;
+}
+
+.skeleton-line.short {
+  width: 60%;
+}
+
+.pulse {
+  animation: skeletonPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes skeletonPulse {
+  0% { opacity: 0.6; }
+  50% { opacity: 1; }
+  100% { opacity: 0.6; }
+}
+
+.magical-glow {
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.1);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  transition: box-shadow 0.5s ease;
+}
+
+.loading-skeleton {
+  border-style: dashed;
+}
+
+/* Loading Message Styles */
+.loading-message-container {
+  padding: 1rem;
+  text-align: center;
+  font-style: italic;
+  color: #d4af37;
+  min-height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loading-message-text {
+  animation: messageFade 0.5s ease-in-out;
+}
+
+@keyframes messageFade {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
