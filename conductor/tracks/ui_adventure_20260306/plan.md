@@ -15,17 +15,17 @@
     - [x] Implement a text field and submit button
 - [x] Task: Conductor - User Manual Verification 'Foundation & Core UI Components' (Protocol in workflow.md) [ef270a0]
 
-## Phase 2: State Management & Integration
-- [x] Task: Basic State Management
+## Phase 2: State Management & Integration [checkpoint: e078523]
+- [x] Task: Basic State Management [8ebcd95]
     - [x] Write unit tests for adventure history and tone selection state
     - [x] Implement state logic to store and clear history
-- [x] Task: Integration with gRPC Backend
+- [x] Task: Integration with gRPC Backend [8ebcd95]
     - [x] Write integration tests for calling the `GenerateNarrative` and `GenerateImage` gRPC methods
     - [x] Implement the gRPC client calls and handle responses
-- [x] Task: Loading & Error States
+- [x] Task: Loading & Error States [8ebcd95]
     - [x] Write tests for displaying placeholders and error messages
     - [x] Implement parallel/lazy loading for images
-- [~] Task: Conductor - User Manual Verification 'State Management & Integration' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'State Management & Integration' (Protocol in workflow.md) [e078523]
 
 ## Phase 3: Final Polishing & UX
 - [ ] Task: Styling & Animations
