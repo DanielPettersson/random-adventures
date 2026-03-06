@@ -1,14 +1,14 @@
 # Implementation Plan: Text-to-Speech Generation
 
 ## Phase 1: Backend Implementation (RPC & Service)
-- [x] Task: Update `proto/narrative.proto` to include a new `GenerateAudio` RPC. (7deb300)
-- [x] Task: Update the narrative service in the Go backend with the new RPC implementation. (7deb300)
-- [x] Task: Implement the `GenerateAudio` handler using the Gemini API for speech generation. (7deb300)
-    - [x] Add the `GenerateAudio` method to `internal/service/narrative.go`. (7deb300)
-    - [x] Update the `google.golang.org/genai` client integration to handle speech generation requests. (7deb300)
-- [x] Task: Write failing tests for the `GenerateAudio` RPC. (7deb300)
-- [x] Task: Verify the implementation passes all tests. (7deb300)
-- [ ] Task: Conductor - User Manual Verification 'Phase 1: Backend Implementation (RPC & Service)' (Protocol in workflow.md)
+- [x] Task: Update `proto/narrative.proto` to include a new `GenerateAudio` RPC. (ee7bec1)
+- [x] Task: Update the narrative service in the Go backend with the new RPC implementation. (ee7bec1)
+- [x] Task: Implement the `GenerateAudio` handler using the Gemini API for speech generation. (ee7bec1)
+    - [x] Add the `GenerateAudio` method to `internal/service/narrative.go`. (ee7bec1)
+    - [x] Update the `google.golang.org/genai` client integration to handle speech generation requests. (ee7bec1)
+- [x] Task: Write failing tests for the `GenerateAudio` RPC. (ee7bec1)
+- [x] Task: Verify the implementation passes all tests. (ee7bec1)
+- [x] Task: Conductor - User Manual Verification 'Phase 1: Backend Implementation (RPC & Service)' (Protocol in workflow.md) (ee7bec1)
 
 ## Phase 2: Frontend Service Layer
 - [ ] Task: Update the generated Connect RPC client for the frontend.
