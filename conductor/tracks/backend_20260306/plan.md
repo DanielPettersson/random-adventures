@@ -21,11 +21,11 @@
     - [x] Implement the handler for narrative generation in the gRPC server
 - [x] Task: Conductor - User Manual Verification 'Narrative Generation Logic' (Protocol in workflow.md) [dd81760]
 
-## Phase 3: Multi-modal & Image Support
+## Phase 3: Multi-modal & Image Support [checkpoint: 7a6df2f]
 - [x] Task: Implement Image Generation using Gemini [8b314f9]
     - [x] Write tests for the image generation service (mocking GenAI)
     - [x] Implement `GenerateImage` logic with stylized illustration support
 - [x] Task: Implement Image gRPC Endpoint [8b314f9]
     - [x] Write integration tests for the `GenerateImage` gRPC endpoint
     - [x] Implement the handler for image generation in the gRPC server
-- [ ] Task: Conductor - User Manual Verification 'Multi-modal Support (Initial)' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Multi-modal Support (Initial)' (Protocol in workflow.md) [7a6df2f]
