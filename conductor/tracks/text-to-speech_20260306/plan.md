@@ -11,11 +11,11 @@
 - [x] Task: Conductor - User Manual Verification 'Phase 1: Backend Implementation (RPC & Service)' (Protocol in workflow.md) (ee7bec1)
 
 ## Phase 2: Frontend Service Layer
-- [ ] Task: Update the generated Connect RPC client for the frontend.
-- [ ] Task: Add a `generateAudio` function to `frontend/src/api/narrative.ts` to call the new RPC.
-- [ ] Task: Write failing tests for the `generateAudio` API call.
-- [ ] Task: Verify the implementation passes all tests.
-- [ ] Task: Conductor - User Manual Verification 'Phase 2: Frontend Service Layer' (Protocol in workflow.md)
+- [x] Task: Update the generated Connect RPC client for the frontend. (ee7bec1)
+- [x] Task: Add a `generateAudio` function to `frontend/src/api/narrative.ts` to call the new RPC. (c9d7b39)
+- [x] Task: Write failing tests for the `generateAudio` API call. (c9d7b39)
+- [x] Task: Verify the implementation passes all tests. (c9d7b39)
+- [x] Task: Conductor - User Manual Verification 'Phase 2: Frontend Service Layer' (Protocol in workflow.md) (c9d7b39)
 
 ## Phase 3: Frontend Integration & State Management
 - [ ] Task: Update the `useAdventure` hook to store and update audio data for segments.
