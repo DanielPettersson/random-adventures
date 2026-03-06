@@ -16,16 +16,16 @@
 - [x] Task: Conductor - User Manual Verification 'Foundation & Core UI Components' (Protocol in workflow.md) [ef270a0]
 
 ## Phase 2: State Management & Integration
-- [ ] Task: Basic State Management
-    - [ ] Write unit tests for adventure history and tone selection state
-    - [ ] Implement state logic to store and clear history
-- [ ] Task: Integration with gRPC Backend
-    - [ ] Write integration tests for calling the `GenerateNarrative` and `GenerateImage` gRPC methods
-    - [ ] Implement the gRPC client calls and handle responses
-- [ ] Task: Loading & Error States
-    - [ ] Write tests for displaying placeholders and error messages
-    - [ ] Implement parallel/lazy loading for images
-- [ ] Task: Conductor - User Manual Verification 'State Management & Integration' (Protocol in workflow.md)
+- [x] Task: Basic State Management
+    - [x] Write unit tests for adventure history and tone selection state
+    - [x] Implement state logic to store and clear history
+- [x] Task: Integration with gRPC Backend
+    - [x] Write integration tests for calling the `GenerateNarrative` and `GenerateImage` gRPC methods
+    - [x] Implement the gRPC client calls and handle responses
+- [x] Task: Loading & Error States
+    - [x] Write tests for displaying placeholders and error messages
+    - [x] Implement parallel/lazy loading for images
+- [~] Task: Conductor - User Manual Verification 'State Management & Integration' (Protocol in workflow.md)
 
 ## Phase 3: Final Polishing & UX
 - [ ] Task: Styling & Animations
