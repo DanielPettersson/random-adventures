@@ -1,12 +1,14 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import App from '../App'
-import { generateNarrative, generateImage } from '../api/narrative'
+import { generateNarrative, generateImage, generateAudio, playAudio } from '../api/narrative'
 
 // Mock the API
 vi.mock('../api/narrative', () => ({
   generateNarrative: vi.fn(),
-  generateImage: vi.fn().mockResolvedValue('mockImageData')
+  generateImage: vi.fn().mockResolvedValue('mockImageData'),
+  generateAudio: vi.fn().mockResolvedValue({ audioData: 'mockAudioData', mimeType: 'audio/mpeg' }),
+  playAudio: vi.fn()
 }))
 
 describe('App Component', () => {
@@ -107,6 +109,36 @@ describe('App Component', () => {
     
     await waitFor(() => {
       expect(generateImageSpy).toHaveBeenCalledWith(expect.any(String), mockDataUrl)
+    })
+  })
+
+  it('renders the TTS toggle and triggers audio when enabled', async () => {
+    const generateAudioSpy = vi.mocked(generateAudio)
+    const playAudioSpy = vi.mocked(playAudio)
+    vi.mocked(generateNarrative).mockResolvedValue({ text: 'Starting adventure...' })
+    
+    render(<App />)
+    
+    // Find TTS toggle
+    const ttsToggle = screen.getByLabelText(/Text-to-Speech/i)
+    expect(ttsToggle).toBeInTheDocument()
+    
+    // Enable TTS
+    fireEvent.click(ttsToggle)
+    expect(ttsToggle).toBeChecked()
+    
+    // Start adventure
+    fireEvent.click(screen.getByRole('button', { name: /Dark/i }))
+    
+    // Wait for text to appear (skeleton should be gone)
+    await screen.findByText(/Starting adventure.../i)
+    
+    await waitFor(() => {
+      expect(generateAudioSpy).toHaveBeenCalledWith('Starting adventure...', 'English')
+    }, { timeout: 2000 })
+    
+    await waitFor(() => {
+      expect(playAudioSpy).toHaveBeenCalledWith('mockAudioData', 'audio/mpeg')
     })
   })
 })

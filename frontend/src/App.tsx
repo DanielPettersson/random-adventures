@@ -6,7 +6,7 @@ import type { AdventureSegment } from './components/AdventureFeed'
 import PromptInput from './components/PromptInput'
 import CameraComponent from './components/CameraComponent'
 import LanguageSelection from './components/LanguageSelection'
-import { generateNarrative, generateImage } from './api/narrative'
+import { generateNarrative, generateImage, generateAudio, playAudio } from './api/narrative'
 
 function App() {
   const [tone, setTone] = useState<string | null>(null)
@@ -47,12 +47,21 @@ function App() {
           s.id === initialSegment.id ? { ...s, imageData } : s
         ))
       }).catch(console.error)
+
+      if (isAudioEnabled) {
+        generateAudio(response.text, language).then(({ audioData, mimeType }) => {
+          setSegments(prev => prev.map(s => 
+            s.id === initialSegment.id ? { ...s, audioData, mimeType } : s
+          ))
+          playAudio(audioData, mimeType)
+        }).catch(console.error)
+      }
       
     } catch (error) {
       console.error("Failed to start adventure:", error)
       setIsLoading(false)
     }
-  }, [playerPhoto, language])
+  }, [playerPhoto, language, isAudioEnabled])
 
   const handlePromptSubmit = useCallback(async (prompt: string) => {
     if (!tone) return
@@ -75,12 +84,21 @@ function App() {
           s.id === newSegment.id ? { ...s, imageData } : s
         ))
       }).catch(console.error)
+
+      if (isAudioEnabled) {
+        generateAudio(response.text, language).then(({ audioData, mimeType }) => {
+          setSegments(prev => prev.map(s => 
+            s.id === newSegment.id ? { ...s, audioData, mimeType } : s
+          ))
+          playAudio(audioData, mimeType)
+        }).catch(console.error)
+      }
       
     } catch (error) {
       console.error("Failed to continue adventure:", error)
       setIsLoading(false)
     }
-  }, [tone, segments, playerPhoto, language])
+  }, [tone, segments, playerPhoto, language, isAudioEnabled])
 
   const handleReset = () => {
     setTone(null)
@@ -104,6 +122,15 @@ function App() {
           <button onClick={() => setIsCameraOpen(!isCameraOpen)}>
             {playerPhoto ? 'Change Photo' : 'Add Photo'}
           </button>
+          <label style={{ marginTop: '10px', display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+            <input 
+              type="checkbox" 
+              checked={isAudioEnabled} 
+              onChange={(e) => setIsAudioEnabled(e.target.checked)}
+              style={{ marginRight: '8px' }}
+            />
+            Text-to-Speech
+          </label>
           {playerPhoto && !isCameraOpen && (
             <div style={{ marginTop: '10px' }}>
               <img src={playerPhoto} alt="Player" style={{ width: '60px', height: '60px', borderRadius: '50%', objectFit: 'cover' }} />
@@ -123,6 +150,15 @@ function App() {
         <>
           <div className="game-controls">
             <button onClick={handleReset}>Reset Adventure</button>
+            <label style={{ marginLeft: '15px', display: 'inline-flex', alignItems: 'center', cursor: 'pointer' }}>
+              <input 
+                type="checkbox" 
+                checked={isAudioEnabled} 
+                onChange={(e) => setIsAudioEnabled(e.target.checked)}
+                style={{ marginRight: '5px' }}
+              />
+              TTS
+            </label>
             <p>Tone: <strong>{tone}</strong> | Language: <strong>{language}</strong></p>
             {playerPhoto && (
               <img src={playerPhoto} alt="Player" style={{ width: '40px', height: '40px', borderRadius: '50%', marginLeft: '10px', objectFit: 'cover' }} />
