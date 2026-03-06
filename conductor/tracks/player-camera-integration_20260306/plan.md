@@ -3,9 +3,9 @@
 ## Phase 1: Proto and Backend Updates
 
 ### Task: Update Proto Definitions
-- [ ] Update `proto/narrative.proto` to include an optional field for the player's photo (Base64 string).
-- [ ] Generate Go and TypeScript code from the updated proto.
-- [ ] Task: Conductor - User Manual Verification 'Update Proto Definitions' (Protocol in workflow.md)
+- [x] Update `proto/narrative.proto` to include an optional field for the player's photo (Base64 string). f45184c
+- [x] Generate Go and TypeScript code from the updated proto. f45184c
+- [x] Task: Conductor - User Manual Verification 'Update Proto Definitions' (Protocol in workflow.md) f45184c
 
 ### Task: Backend Narrative Service Update
 - [ ] **Red Phase:** Write failing tests in `internal/service/narrative_test.go` to verify that the photo is received and included in the image generation prompt.
