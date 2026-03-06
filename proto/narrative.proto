@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package narrative;
+
+option go_package = "random-adventures/proto/narrative";
+
+service NarrativeService {
+  rpc GenerateNarrative(GenerateNarrativeRequest) returns (GenerateNarrativeResponse);
+  rpc GenerateImage(GenerateImageRequest) returns (GenerateImageResponse);
+}
+
+message GenerateNarrativeRequest {
+  string prompt = 1;
+  string tone = 2;
+  repeated string history = 3;
+}
+
+message GenerateNarrativeResponse {
+  string text = 1;
+}
+
+message GenerateImageRequest {
+  string prompt = 1;
+}
+
+message GenerateImageResponse {
+  bytes image_data = 1;
+}
