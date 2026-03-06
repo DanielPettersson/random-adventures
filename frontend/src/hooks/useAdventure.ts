@@ -29,6 +29,12 @@ export const useAdventure = () => {
     )
   }, [])
 
+  const updateSegmentAudio = useCallback((id: string, audioData: string, mimeType: string) => {
+    setSegments((prev) =>
+      prev.map((s) => (s.id === id ? { ...s, audioData, mimeType } : s))
+    )
+  }, [])
+
   const reset = useCallback(() => {
     setTone(null)
     setSegments([])
@@ -43,6 +49,7 @@ export const useAdventure = () => {
     selectTone,
     addSegment,
     updateSegmentImage,
+    updateSegmentAudio,
     reset
   }
 }

@@ -51,6 +51,25 @@ describe('useAdventure', () => {
     expect(segment?.imageData).toBe('image-data')
   })
 
+  it('updates a segment with audio data', () => {
+    const { result } = renderHook(() => useAdventure())
+    let segmentId: string
+    act(() => {
+      result.current.selectTone('Humorous')
+    })
+    act(() => {
+      segmentId = result.current.addSegment('Dance with the goblin')
+    })
+    
+    act(() => {
+      result.current.updateSegmentAudio(segmentId, 'audio-data', 'audio/mpeg')
+    })
+    
+    const segment = result.current.segments.find(s => s.id === segmentId)
+    expect(segment?.audioData).toBe('audio-data')
+    expect(segment?.mimeType).toBe('audio/mpeg')
+  })
+
   it('resets state', () => {
     const { result } = renderHook(() => useAdventure())
     act(() => {

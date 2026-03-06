@@ -14,6 +14,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(false)
   const [playerPhoto, setPlayerPhoto] = useState<string | undefined>(undefined)
   const [isCameraOpen, setIsCameraOpen] = useState(false)
+  const [isAudioEnabled, setIsAudioEnabled] = useState(false)
 
   const defaultLanguage = useMemo(() => {
     const lang = navigator.language.split('-')[0]

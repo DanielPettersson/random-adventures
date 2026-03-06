@@ -5,6 +5,8 @@ export interface AdventureSegment {
   id: string
   text: string
   imageData?: string
+  audioData?: string
+  mimeType?: string
   prompt?: string
 }
 
