@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 	"testing"
 
 	"random-adventures/proto/narrative"
@@ -87,6 +88,71 @@ func contains(s, substr string) bool {
 		}
 		return false
 	})()))
+}
+
+func TestGenerateNarrative_Error(t *testing.T) {
+	mockClient := &mockGeminiClient{
+		generateContentFunc: func(ctx context.Context, model string, systemInstruction string, prompt string) (string, error) {
+			return "", fmt.Errorf("API error")
+		},
+	}
+
+	s := NewNarrativeService(mockClient)
+
+	req := connect.NewRequest(&narrative.GenerateNarrativeRequest{
+		Prompt: "Start an adventure",
+		Tone:   "Dark",
+	})
+	_, err := s.GenerateNarrative(context.Background(), req)
+
+	if err == nil {
+		t.Fatal("Expected error, got nil")
+	}
+}
+
+func TestGenerateImage_Error(t *testing.T) {
+	mockClient := &mockGeminiClient{
+		generateImageFunc: func(ctx context.Context, model string, prompt string) ([]byte, error) {
+			return nil, fmt.Errorf("API error")
+		},
+	}
+
+	s := NewNarrativeService(mockClient)
+
+	req := connect.NewRequest(&narrative.GenerateImageRequest{
+		Prompt: "A dark forest",
+	})
+	_, err := s.GenerateImage(context.Background(), req)
+
+	if err == nil {
+		t.Fatal("Expected error, got nil")
+	}
+}
+
+func TestGenerateNarrative_History(t *testing.T) {
+	var capturedPrompt string
+	mockClient := &mockGeminiClient{
+		generateContentFunc: func(ctx context.Context, model string, systemInstruction string, prompt string) (string, error) {
+			capturedPrompt = prompt
+			return "AI generated story", nil
+		},
+	}
+
+	s := NewNarrativeService(mockClient)
+
+	req := connect.NewRequest(&narrative.GenerateNarrativeRequest{
+		Prompt:  "Next move",
+		Tone:    "Epic",
+		History: []string{"Step 1", "Step 2"},
+	})
+	_, _ = s.GenerateNarrative(context.Background(), req)
+
+	if !contains(capturedPrompt, "Recent History for Context:") {
+		t.Errorf("Prompt missing history context: %q", capturedPrompt)
+	}
+	if !contains(capturedPrompt, "- Step 1") || !contains(capturedPrompt, "- Step 2") {
+		t.Errorf("Prompt missing history steps: %q", capturedPrompt)
+	}
 }
 
 func TestGenerateImage_Success(t *testing.T) {
