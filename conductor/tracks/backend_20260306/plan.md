@@ -1,13 +1,13 @@
 # Implementation Plan: Implement core web backend and narrative generation API
 
 ## Phase 1: Foundation & API Definition
-- [x] Task: Define gRPC service and Protobuf messages
+- [x] Task: Define gRPC service and Protobuf messages [1d05d47]
     - [x] Create `proto/narrative.proto` with `NarrativeService` and message definitions
     - [x] Generate Go code from the Protobuf definition
-- [x] Task: Initialize Go project structure and dependencies
+- [x] Task: Initialize Go project structure and dependencies [1d05d47]
     - [x] Organize project directories into `cmd`, `internal`, and `proto`
     - [x] Update `go.mod` with necessary dependencies
-- [x] Task: Implement basic gRPC server
+- [x] Task: Implement basic gRPC server [1d05d47]
     - [x] Write unit tests for server startup and error handling
     - [x] Implement the main gRPC server logic and graceful shutdown
 - [ ] Task: Conductor - User Manual Verification 'Foundation & API Definition' (Protocol in workflow.md)
