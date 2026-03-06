@@ -164,13 +164,13 @@ func NewRealGeminiClient(client *genai.Client) GeminiClient {
 }
 
 func (r *realGeminiClient) GenerateContent(ctx context.Context, model string, systemInstruction string, prompt string) (string, error) {
-	var config *genai.GenerateContentConfig
+	config := &genai.GenerateContentConfig{
+		ResponseModalities: []string{"TEXT"},
+	}
 	if systemInstruction != "" {
-		config = &genai.GenerateContentConfig{
-			SystemInstruction: &genai.Content{
-				Parts: []*genai.Part{
-					{Text: systemInstruction},
-				},
+		config.SystemInstruction = &genai.Content{
+			Parts: []*genai.Part{
+				{Text: systemInstruction},
 			},
 		}
 	}
