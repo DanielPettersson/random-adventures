@@ -12,14 +12,14 @@
     - [x] Implement the main gRPC server logic and graceful shutdown
 - [x] Task: Conductor - User Manual Verification 'Foundation & API Definition' (Protocol in workflow.md) [5cfaeef]
 
-## Phase 2: Narrative Generation Logic
+## Phase 2: Narrative Generation Logic [checkpoint: dd81760]
 - [x] Task: Integrate Gemini for narrative generation [3c0c8f3]
     - [x] Write tests for the narrative service (mocking the GenAI client)
     - [x] Implement Gemini client integration and `GenerateNarrative` logic
 - [x] Task: Implement Narrative gRPC Endpoint [3c0c8f3]
     - [x] Write integration tests for the `GenerateNarrative` gRPC endpoint
     - [x] Implement the handler for narrative generation in the gRPC server
-- [ ] Task: Conductor - User Manual Verification 'Narrative Generation Logic' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Narrative Generation Logic' (Protocol in workflow.md) [dd81760]
 
 ## Phase 3: Multi-modal & Image Support
 - [ ] Task: Implement Image Generation using Gemini
